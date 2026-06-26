@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "starter"
+		},
+		{
+			"path": "discovery-service"
+		}
+	],
+	"settings": {
+		"java.compile.nullAnalysis.mode": "automatic",
+		"java.dependency.packagePresentation": "hierarchical"
+	}
+}
