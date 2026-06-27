@@ -15,6 +15,10 @@
 		{
 			"name": "Gateway ⛓️‍💥",
 			"path": "backend/gateway-service"
+		},
+		{
+			"name": "Auth 👮🏿‍♂️",
+			"path": "backend/auth-service"
 		}
 	],
 	"settings": {
