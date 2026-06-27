@@ -11,10 +11,15 @@
 		{
 			"name": "Docker 🐳",
 			"path": "backend/docker"
+		},
+		{
+			"name": "Gateway ⛓️‍💥",
+			"path": "backend/gateway-service"
 		}
 	],
 	"settings": {
 		"java.compile.nullAnalysis.mode": "automatic",
-		"java.dependency.packagePresentation": "hierarchical"
+		"java.dependency.packagePresentation": "hierarchical",
+		"java.configuration.updateBuildConfiguration": "automatic"
 	}
 }

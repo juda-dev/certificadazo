@@ -1,0 +1,35 @@
+server:
+  port: 2022
+
+spring:
+  application:
+    name: gateway-service
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri:  ${KEYCLOAK_ISSUER_URI:http://localhost:8080/realms/certificadazo}
+          jwk-set-uri: ${KEYCLOAK_JWKS_URI:http://localhost:8080/realms/certificadazo/protocol/openid-connect/certs}
+  
+  cloud:
+    gateway:
+      server:
+        webmvc:
+          routes:
+            - id: auth-service
+              uri: lb://auth-service
+              predicates:
+                - Path=/api/auth/**
+              filters:
+                - TokenRelay=
+                - StripPrefix=1
+
+
+eureka:
+    client:
+        service-url:
+            defaultZone: http://eureka-server:8761/eureka
+
+app:
+  cors-origin: ${CORS_ORIGIN}
