@@ -1,12 +1,16 @@
 {
 	"folders": [
 		{
-			"name": "Starter 👶🏿"
+			"name": "Starter 👶🏿",
 			"path": "backend/starter"
 		},
 		{
-			"name": "Discovery 🕵🏿‍♂️"
+			"name": "Discovery 🕵🏿‍♂️",
 			"path": "backend/discovery-service"
+		},
+		{
+			"name": "Docker 🐳",
+			"path": "backend/docker"
 		}
 	],
 	"settings": {
