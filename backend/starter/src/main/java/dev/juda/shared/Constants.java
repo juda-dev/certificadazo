@@ -10,11 +10,11 @@ public final class Constants {
     public static final int MAX_PAGE_SIZE = 100;
     public static final int DEFAULT_PAGE_NUMBER = 0;
 
-    public static final String USER_EVENT_TOPIC = "user-event";
-    public static final String AUTH_EVENT_TOPIC = "auth-event";
-    public static final String TEMPLATE_EVENT_TOPIC = "template-event";
-    public static final String IA_EVENT_TOPIC = "ia-event";
-    public static final String NOTIFICATION_EVENT_TOPIC = "notification-event";
+    public static final String USER_EVENT_TOPIC = "user-events";
+    public static final String AUTH_EVENT_TOPIC = "auth-events";
+    public static final String TEMPLATE_EVENT_TOPIC = "template-events";
+    public static final String IA_EVENT_TOPIC = "ia-events";
+    public static final String NOTIFICATION_EVENT_TOPIC = "notification-events";
 
     public static final String KEYCLOAK_SERVER_URL = "http://localhost:8080";
     public static final String KEYCLOAK_REALM = "certificadazo";
