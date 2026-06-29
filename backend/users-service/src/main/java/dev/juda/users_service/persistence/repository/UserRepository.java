@@ -1,0 +1,11 @@
+package dev.juda.users_service.persistence.repository;
+
+import java.util.UUID;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import dev.juda.users_service.persistence.entity.UserEntity;
+
+public interface UserRepository extends JpaRepository<UserEntity, UUID>{
+
+}
