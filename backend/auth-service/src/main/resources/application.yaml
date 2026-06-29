@@ -1,0 +1,21 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: auth-service
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/certificadazo
+          jwk-set-uri: http://localhost:8080/realms/certificadazo/protocol/openid-connect/certs
+
+keycloak:
+  server-url: http://localhost:8080
+  realm: certificadazo
+  client-id: certificadazo-client
+  client-secret: ${KEYCLOAK_CLIENT_SECRET:eujeGotHN7XuePNiax9vaGGx8ibN2sfr}
+  admin-username: ${KEYCLOAK_ADMIN_USERNAME:admin}
+  admin-password: ${KEYCLOAK_ADMIN_PASSWORD:admin}
