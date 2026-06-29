@@ -6,7 +6,7 @@ spring:
     name: users-service
 
   datasource:
-    url: ${DB_URL:jdbc:mysql://users-certificadazo:3300/certificadazo?createDatabaseIfNotExist=true}
+    url: ${DB_URL:jdbc:mysql://localhost:3300/users-db?createDatabaseIfNotExist=true}
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:judadev}
   jpa:
