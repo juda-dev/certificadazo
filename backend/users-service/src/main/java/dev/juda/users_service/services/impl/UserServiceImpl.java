@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.integration.support.MessageBuilder;
@@ -11,11 +12,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import dev.juda.users_service.exceptions.CommandNotSentException;
-import dev.juda.users_service.exceptions.TimeoutException;
+import dev.juda.users_service.exceptions.TimeoutCommandException;
 import dev.juda.users_service.mappers.UserMapper;
 import dev.juda.users_service.messaging.ReplyInbox;
 import dev.juda.users_service.models.dto.messaging.Command;
-import dev.juda.users_service.models.dto.messaging.CreateReply;
+import dev.juda.users_service.models.dto.messaging.CreateUserReply;
 import dev.juda.users_service.models.dto.messaging.Reply;
 import dev.juda.users_service.models.dto.request.CreateUserRequest;
 import dev.juda.users_service.models.dto.response.CreateUserResponse;
@@ -46,9 +47,9 @@ public class UserServiceImpl implements UserService {
         var future = replyInbox.register(correlationId);
 
         var msg = MessageBuilder
-            .withPayload(cmd)
-            .setHeader("correlationId", correlationId)
-            .build();
+                .withPayload(cmd)
+                .setHeader("correlationId", correlationId)
+                .build();
 
         boolean sent = this.streamBridge.send("commands-out-0", msg);
 
@@ -56,12 +57,12 @@ public class UserServiceImpl implements UserService {
             throw new CommandNotSentException();
         }
 
-        Reply<CreateReply> reply;
+        Reply<CreateUserReply> reply;
 
         try {
-            reply = (Reply<CreateReply>) future.get(Duration.ofSeconds(5).toMillis(), TimeUnit.MILLISECONDS);
-        } catch (InterruptedException | ExecutionException | TimeoutException | java.util.concurrent.TimeoutException e) {
-            throw new TimeoutException("Timeout waiting for response from KeyCloak service");
+            reply = (Reply<CreateUserReply>) future.get(Duration.ofSeconds(5).toMillis(), TimeUnit.MILLISECONDS);
+        } catch (InterruptedException | ExecutionException | TimeoutCommandException | TimeoutException e) {
+            throw new TimeoutCommandException("Timeout waiting for response from KeyCloak service");
         }
 
         UserEntity user = new UserEntity();
