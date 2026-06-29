@@ -13,6 +13,24 @@ spring:
     hibernate:
       ddl-auto: update
 
+  cloud:
+    function:
+      definition: handleReplies
+
+    stream:
+      bindings:
+        commands-out-0:
+          destination: users-events
+          content-type: application/json
+        replies-in-0:
+          destination: keycloak-replies
+          content-type: application/json
+          group: users-service
+
+      kafka:
+        binder:
+          brokers: ${KAFKA_URI:localhost:9092}
+          
 eureka:
   client:
     service-url:
