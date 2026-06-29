@@ -15,6 +15,10 @@
 		{
 			"name": "Auth 👮🏿‍♂️",
 			"path": "backend/auth-service"
+		},
+		{
+			"name": "Users 👫🏿",
+			"path": "backend/users-service"
 		}
 	],
 	"settings": {

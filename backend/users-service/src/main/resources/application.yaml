@@ -1,0 +1,19 @@
+server:
+  port: ${PORT:0}
+
+spring:
+  application:
+    name: users-service
+
+  datasource:
+    url: ${DB_URL:jdbc:mysql://users-certificadazo:3300/certificadazo?createDatabaseIfNotExist=true}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:judadev}
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URI:http://eureka-server:8761/eureka}
