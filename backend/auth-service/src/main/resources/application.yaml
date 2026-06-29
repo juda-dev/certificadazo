@@ -12,6 +12,22 @@ spring:
           issuer-uri: http://localhost:8080/realms/certificadazo
           jwk-set-uri: http://localhost:8080/realms/certificadazo/protocol/openid-connect/certs
 
+  cloud:
+    function:
+      definition: handleCommands
+
+    stream:
+      bindings:
+        handleCommands-in-0:
+          destination: users-events
+          group: auth-service
+        handleCommands-out-0:
+          destination: keycloak-replies
+
+      kafka:
+        binder:
+          brokers: localhost:9092
+
 keycloak:
   server-url: http://localhost:8080
   realm: certificadazo
@@ -19,3 +35,8 @@ keycloak:
   client-secret: ${KEYCLOAK_CLIENT_SECRET:eujeGotHN7XuePNiax9vaGGx8ibN2sfr}
   admin-username: ${KEYCLOAK_ADMIN_USERNAME:admin}
   admin-password: ${KEYCLOAK_ADMIN_PASSWORD:admin}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}

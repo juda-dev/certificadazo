@@ -24,6 +24,7 @@
 	"settings": {
 		"java.compile.nullAnalysis.mode": "automatic",
 		"java.dependency.packagePresentation": "hierarchical",
-		"java.configuration.updateBuildConfiguration": "automatic"
+		"java.configuration.updateBuildConfiguration": "automatic",
+		"kafka.clusters.selected": "DockerKafka-bG9jYWxob3N0OjkwOTI"
 	}
 }
