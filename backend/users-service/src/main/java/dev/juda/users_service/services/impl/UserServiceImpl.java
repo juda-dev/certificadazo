@@ -24,6 +24,7 @@ import dev.juda.users_service.models.entities.UserEntity;
 import dev.juda.users_service.models.enums.CommandType;
 import dev.juda.users_service.repositories.UserRepository;
 import dev.juda.users_service.services.UserService;
+import tools.jackson.databind.ObjectMapper;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -57,18 +58,21 @@ public class UserServiceImpl implements UserService {
             throw new CommandNotSentException();
         }
 
-        Reply<CreateUserReply> reply;
+        Reply<?> reply;
 
         try {
-            reply = (Reply<CreateUserReply>) future.get(Duration.ofSeconds(5).toMillis(), TimeUnit.MILLISECONDS);
+            reply = (Reply<?>) future.get(Duration.ofSeconds(5).toMillis(), TimeUnit.MILLISECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutCommandException | TimeoutException e) {
             throw new TimeoutCommandException("Timeout waiting for response from KeyCloak service");
         }
 
+        ObjectMapper mapper = new ObjectMapper();
+        CreateUserReply keycloakReply = mapper.convertValue(reply.body(), CreateUserReply.class);
+
         UserEntity user = new UserEntity();
         user.setDocumentId(req.documentId());
         user.setName(req.name());
-        user.setKeycloackId(reply.body().keycloakId());
+        user.setKeycloackId(keycloakReply.keycloakId());
 
         return UserMapper.toCreateUserResponse(userRepository.save(user));
     }

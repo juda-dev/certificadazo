@@ -22,7 +22,7 @@ spring:
         commands-out-0:
           destination: users-events
           content-type: application/json
-        replies-in-0:
+        handleReplies-in-0:
           destination: keycloak-replies
           content-type: application/json
           group: users-service
@@ -34,4 +34,4 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: ${EUREKA_URI:http://eureka-server:8761/eureka}
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
