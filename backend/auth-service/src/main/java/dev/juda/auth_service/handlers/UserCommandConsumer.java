@@ -7,11 +7,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 
-import dev.juda.auth_service.model.dto.messaging.Command;
-import dev.juda.auth_service.model.dto.messaging.CreateUserRequest;
-import dev.juda.auth_service.model.dto.messaging.Reply;
-import dev.juda.auth_service.model.enums.CommandType;
-import dev.juda.auth_service.model.enums.ReplyStatus;
+import dev.juda.auth_service.models.dto.messaging.Command;
+import dev.juda.auth_service.models.dto.messaging.CreateUserRequest;
+import dev.juda.auth_service.models.dto.messaging.Reply;
+import dev.juda.auth_service.models.enums.CommandType;
+import dev.juda.auth_service.models.enums.ReplyStatus;
 import dev.juda.auth_service.services.AuthService;
 
 @Configuration

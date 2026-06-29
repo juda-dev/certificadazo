@@ -1,4 +1,4 @@
-package dev.juda.auth_service.model.dto.response;
+package dev.juda.auth_service.models.dto.response;
 
 import java.util.UUID;
 

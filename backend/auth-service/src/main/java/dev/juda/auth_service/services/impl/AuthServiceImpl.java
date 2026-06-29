@@ -14,8 +14,9 @@ import org.springframework.stereotype.Service;
 
 import dev.juda.auth_service.exceptions.RoleNotFoundException;
 import dev.juda.auth_service.exceptions.UserNotCreatedException;
-import dev.juda.auth_service.model.dto.messaging.CreateUserRequest;
-import dev.juda.auth_service.model.dto.response.CreateUserReply;
+import dev.juda.auth_service.models.dto.messaging.CreateUserRequest;
+import dev.juda.auth_service.models.dto.response.CreateUserReply;
+import dev.juda.auth_service.models.enums.Roles;
 import dev.juda.auth_service.services.AuthService;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.core.Response;
@@ -66,7 +67,7 @@ public class AuthServiceImpl implements AuthService {
         try {
             UserResource userResource = keycloak.realm(realm).users().get(userId);
             RoleRepresentation role = keycloak.realm(realm).roles()
-                    .get("ROLE_USER").toRepresentation();
+                    .get(Roles.USER.getName()).toRepresentation();
             userResource.roles().realmLevel().add(Collections.singletonList(role));
         } catch (NotFoundException e) {
             throw new RoleNotFoundException();

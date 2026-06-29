@@ -1,4 +1,4 @@
-package dev.juda.auth_service.model.enums;
+package dev.juda.auth_service.models.enums;
 
 public enum ReplyStatus {
     SUCCESS,
