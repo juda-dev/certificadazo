@@ -1,6 +1,7 @@
 volumes:
   mysql-data:
   kafka-data:
+  keycloak-data:
 
 networks:
   certificadazo-network:
@@ -70,12 +71,12 @@ services:
       - --health-enabled=true
       - --metrics-enabled=true
     depends_on:
-      mysql-certificadazo:
+      mysql-users:
         condition: service_healthy
     environment:
-      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN_USERNAME:-admin}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
-      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN:-admin}
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN_USERNAME:-admin}
       KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
       KC_DB: dev-file
       KC_HTTP_ENABLED: "true"
