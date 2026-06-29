@@ -1,4 +1,4 @@
-package dev.juda.gateway_service.gateway.infrastructure.config;
+package dev.juda.gateway_service.config;
 
 import java.util.Collection;
 import java.util.Collections;

@@ -7,49 +7,12 @@ networks:
     driver: bridge
 
 services:
-  mysql-certificadazo:
-    image: mysql:8.4
-    container_name: mysql-certificadazo
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
-      MYSQL_USER: ${MYSQL_USER:-juda}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-judapassword}
-    ports:
-      - "3307:3306"
-    volumes:
-      - mysql-data:/var/lib/mysql
-    networks:
-      - certificadazo-network
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-rootpassword}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
-
   kafka:
-    image: apache/kafka:3.8.0
+    image: apache/kafka:latest
     container_name: kafka
     restart: unless-stopped
-    environment:
-      KAFKA_NODE_ID: 1
-      KAFKA_PROCESS_ROLES: broker,controller
-      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
-      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_LISTENERS: INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:29092,CONTROLLER://0.0.0.0:9093
-      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9092,EXTERNAL://localhost:29092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      KAFKA_LOG_DIRS: /var/lib/kafka/data
-      KAFKA_LOG_RETENTION_HOURS: 168
-      KAFKA_LOG_SEGMENT_BYTES: 1073741824
     ports:
       - "9092:9092"
-      - "29092:29092"
     volumes:
       - kafka-data:/var/lib/kafka/data
     networks:
@@ -70,11 +33,11 @@ services:
         condition: service_healthy
     entrypoint: >
       bash -c "
-      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9092 --create --if-not-exists --topic user-events --partitions 3 --replication-factor 1 &&
-      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9092 --create --if-not-exists --topic auth-events --partitions 3 --replication-factor 1 &&
-      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9092 --create --if-not-exists --topic template-events --partitions 3 --replication-factor 1 &&
-      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9092 --create --if-not-exists --topic ia-events --partitions 3 --replication-factor 1 &&
-      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9092 --create --if-not-exists --topic notification-events --partitions 3 --replication-factor 1
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9092 --create --if-not-exists --topic user-events --partitions 1 --replication-factor 1 &&
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9092 --create --if-not-exists --topic auth-events --partitions 1 --replication-factor 1 &&
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9092 --create --if-not-exists --topic template-events --partitions 1 --replication-factor 1 &&
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9092 --create --if-not-exists --topic ia-events --partitions 1 --replication-factor 1 &&
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9092 --create --if-not-exists --topic notification-events --partitions 1 --replication-factor 1
       "
     networks:
       - certificadazo-network
@@ -114,40 +77,4 @@ services:
       interval: 15s
       timeout: 10s
       retries: 10
-      start_period: 90s
-
-  debezium:
-    image: debezium/connect:3.0.0.Final
-    container_name: debezium
-    restart: unless-stopped
-    depends_on:
-      kafka:
-        condition: service_healthy
-      mysql-certificadazo:
-        condition: service_healthy
-    environment:
-      BOOTSTRAP_SERVERS: kafka:9092
-      GROUP_ID: debezium-connect
-      CONFIG_STORAGE_TOPIC: debezium-configs
-      OFFSET_STORAGE_TOPIC: debezium-offsets
-      STATUS_STORAGE_TOPIC: debezium-status
-      CONFIG_STORAGE_REPLICATION_FACTOR: 1
-      OFFSET_STORAGE_REPLICATION_FACTOR: 1
-      STATUS_STORAGE_REPLICATION_FACTOR: 1
-      KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
-      VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
-      INTERNAL_KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
-      INTERNAL_VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
-      CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE: "false"
-      CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: "false"
-      CONNECT_PLUGIN_PATH: /kafka/connect
-    ports:
-      - "8081:8081"
-    networks:
-      - certificadazo-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8081/connectors"]
-      interval: 15s
-      timeout: 10s
-      retries: 5
       start_period: 90s
