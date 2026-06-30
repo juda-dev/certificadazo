@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import dev.juda.users_service.presentation.dto.response.ErrorResponse;
 import dev.juda.users_service.service.exception.CommandNotSentException;
 import dev.juda.users_service.service.exception.ExistingUserException;
+import dev.juda.users_service.service.exception.NonExistentUser;
 import dev.juda.users_service.service.exception.TimeoutCommandException;
 
 import static dev.juda.users_service.util.enums.ErrorCatalog.*;
@@ -20,6 +21,18 @@ import java.util.Collections;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NonExistentUser.class)
+    public ErrorResponse handleNonExistentUser(NonExistentUser ex){
+        return new ErrorResponse(
+            NON_EXISTENT_USER.getCode(),
+            HttpStatus.NOT_FOUND,
+            NON_EXISTENT_USER.getMessage(),
+            null,
+            LocalDateTime.now()
+        );
+    }
 
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(ExistingUserException.class)

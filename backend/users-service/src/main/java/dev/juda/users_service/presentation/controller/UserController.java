@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.juda.users_service.presentation.dto.request.CreateUserRequest;
-import dev.juda.users_service.presentation.dto.response.CreateUserResponse;
+import dev.juda.users_service.presentation.dto.response.UserResponse;
 import dev.juda.users_service.service.interfaces.UserService;
 import jakarta.validation.Valid;
 
@@ -21,7 +21,7 @@ public class UserController {
     }
 
     @PostMapping
-    public CreateUserResponse create(@Valid @RequestBody CreateUserRequest req){
+    public UserResponse create(@Valid @RequestBody CreateUserRequest req){
         return userService.create(req);
     }
 }

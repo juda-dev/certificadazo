@@ -18,9 +18,11 @@ import dev.juda.users_service.messaging.dto.out.Command;
 import dev.juda.users_service.persistence.entity.UserEntity;
 import dev.juda.users_service.persistence.repository.UserRepository;
 import dev.juda.users_service.presentation.dto.request.CreateUserRequest;
-import dev.juda.users_service.presentation.dto.response.CreateUserResponse;
+import dev.juda.users_service.presentation.dto.request.UpdateUserRequest;
+import dev.juda.users_service.presentation.dto.response.UserResponse;
 import dev.juda.users_service.service.exception.CommandNotSentException;
 import dev.juda.users_service.service.exception.ExistingUserException;
+import dev.juda.users_service.service.exception.NonExistentUser;
 import dev.juda.users_service.service.exception.TimeoutCommandException;
 import dev.juda.users_service.service.interfaces.UserService;
 import dev.juda.users_service.util.enums.CommandType;
@@ -42,7 +44,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public CreateUserResponse create(CreateUserRequest req) {
+    public UserResponse create(CreateUserRequest req) {
 
         if (userRepository.existsByEmail(req.email())) {
             throw new ExistingUserException("email address.");
@@ -86,7 +88,43 @@ public class UserServiceImpl implements UserService {
         user.setEmail(req.email());
         user.setKeycloackId(keycloakReply.keycloakId());
 
-        return UserMapper.toCreateUserResponse(userRepository.save(user));
+        return UserMapper.toUserResponse(userRepository.save(user));
+    }
+
+    @Override
+    @Transactional
+    public UserResponse update(UUID id, UpdateUserRequest req) {
+        UserEntity user = userRepository.findById(id).orElseThrow(NonExistentUser::new);
+
+        String correlationId = UUID.randomUUID().toString();
+        var future = replyInbox.register(correlationId);
+
+        var cmd = new Command<>(CommandType.UPDATE, user.getKeycloackId(), req);
+
+        var msg = MessageBuilder
+                    .withPayload(cmd)
+                    .setHeader("correlationId", correlationId)
+                    .build();
+
+        boolean sent = this.streamBridge.send("commands-out-0.", msg);
+
+        if (!sent) {
+            throw new CommandNotSentException();
+        }
+
+        Reply<?> reply;
+
+        try {
+            reply = (Reply<?>) future.get(Duration.ofSeconds(5).toMillis(), TimeUnit.MILLISECONDS);
+        } catch (InterruptedException | ExecutionException | TimeoutCommandException | TimeoutException e) {
+            throw new TimeoutCommandException("auth-service_UPDATE");
+        }
+
+        user.setFirstName(req.firstName());
+        user.setLastName(req.lastName());
+        user.setEmail(req.email());
+
+        return UserMapper.toUserResponse(userRepository.save(user));
     }
 
 }

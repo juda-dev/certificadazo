@@ -3,7 +3,7 @@ package dev.juda.users_service.presentation.dto.response;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public record CreateUserResponse(
+public record UserResponse(
         UUID id,
         String firstName,
         String lastName,

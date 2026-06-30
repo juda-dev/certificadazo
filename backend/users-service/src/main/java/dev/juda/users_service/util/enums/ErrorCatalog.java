@@ -5,7 +5,8 @@ public enum ErrorCatalog {
     BAD_CREDENTIALS("ERR_BAD_CREDENTIALS_001", "Bad credentials"),
     COMMAND_NOT_SENT("ERR_USER_001","The Kafka command couldn't be sent"),
     TIMEOUT_COMMAND("ERR_USER_002", "Timeout waiting for response from the sent command to "),
-    EXISTING_USER("ERR_USER_003", "There is already a user with this ");    
+    EXISTING_USER("ERR_USER_003", "There is already a user with this "),
+    NON_EXISTENT_USER("ERR_USER_004", "User not found");    
 
     private final String code;
     private final String message;
