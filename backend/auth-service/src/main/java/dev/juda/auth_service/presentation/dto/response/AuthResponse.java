@@ -1,4 +1,4 @@
-package dev.juda.auth_service.models.dto.response;
+package dev.juda.auth_service.presentation.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

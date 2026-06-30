@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.juda.auth_service.models.dto.request.AuthRequest;
-import dev.juda.auth_service.models.dto.response.AuthResponse;
+import dev.juda.auth_service.presentation.dto.request.AuthRequest;
+import dev.juda.auth_service.presentation.dto.response.AuthResponse;
 import dev.juda.auth_service.service.interfaces.AuthService;
 
 @RestController

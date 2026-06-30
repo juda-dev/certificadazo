@@ -1,4 +1,4 @@
-package dev.juda.auth_service.models.dto.request;
+package dev.juda.auth_service.presentation.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 

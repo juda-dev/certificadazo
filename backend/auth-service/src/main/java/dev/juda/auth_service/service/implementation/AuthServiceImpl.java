@@ -22,9 +22,9 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import dev.juda.auth_service.messaging.dto.CreateUserRequest;
-import dev.juda.auth_service.models.dto.request.AuthRequest;
-import dev.juda.auth_service.models.dto.response.AuthResponse;
-import dev.juda.auth_service.models.dto.response.CreateUserReply;
+import dev.juda.auth_service.presentation.dto.request.AuthRequest;
+import dev.juda.auth_service.presentation.dto.response.AuthResponse;
+import dev.juda.auth_service.presentation.dto.response.CreateUserReply;
 import dev.juda.auth_service.service.exception.InvalidCredentialsException;
 import dev.juda.auth_service.service.exception.RoleNotFoundException;
 import dev.juda.auth_service.service.exception.UserNotCreatedException;
