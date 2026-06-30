@@ -20,8 +20,14 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(nullable = false)
-    private String name;
+    @Column(nullable = false, name = "first_name")
+    private String firstName;
+    
+    @Column(nullable = false, name = "last_name")
+    private String lastName;
+
+    @Column(nullable = false, unique = true)
+    private String email;
 
     @Column(name = "document_id", nullable = false, unique = true)
     private String documentId;
@@ -54,12 +60,28 @@ public class UserEntity {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getDocumentId() {

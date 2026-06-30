@@ -4,11 +4,12 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record CreateUserResponse(
-    UUID id,
-    String name,
-    String documentId,
-    UUID keycloakId,
-    LocalDateTime createdAt
-) {
+        UUID id,
+        String firstName,
+        String lastName,
+        String email,
+        String documentId,
+        UUID keycloakId,
+        LocalDateTime createdAt) {
 
 }

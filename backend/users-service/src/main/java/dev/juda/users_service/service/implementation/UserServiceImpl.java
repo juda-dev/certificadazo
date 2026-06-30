@@ -71,7 +71,9 @@ public class UserServiceImpl implements UserService {
 
         UserEntity user = new UserEntity();
         user.setDocumentId(req.documentId());
-        user.setName(req.name());
+        user.setFirstName(req.firstName());
+        user.setLastName(req.lastName());
+        user.setEmail(req.email());
         user.setKeycloackId(keycloakReply.keycloakId());
 
         return UserMapper.toCreateUserResponse(userRepository.save(user));

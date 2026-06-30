@@ -4,9 +4,17 @@ import dev.juda.users_service.persistence.entity.UserEntity;
 import dev.juda.users_service.presentation.dto.response.CreateUserResponse;
 
 public final class UserMapper {
-    private UserMapper(){}
+    private UserMapper() {
+    }
 
-    public static CreateUserResponse toCreateUserResponse(UserEntity user){
-        return new CreateUserResponse(user.getId(), user.getName(), user.getDocumentId(), user.getKeycloackId(), user.getCreatedAt());
+    public static CreateUserResponse toCreateUserResponse(UserEntity user) {
+        return new CreateUserResponse(
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getDocumentId(),
+                user.getKeycloackId(),
+                user.getCreatedAt());
     }
 }

@@ -61,6 +61,9 @@ public class AuthServiceImpl implements AuthService {
         try {
             UserRepresentation user = new UserRepresentation();
             user.setUsername(req.documentId());
+            user.setEmail(req.email());
+            user.setFirstName(req.firstName());
+            user.setLastName(req.lastName());
             user.setEmailVerified(true);
             user.setEnabled(true);
 

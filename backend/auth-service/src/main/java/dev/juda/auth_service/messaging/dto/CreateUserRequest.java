@@ -1,9 +1,10 @@
 package dev.juda.auth_service.messaging.dto;
 
 public record CreateUserRequest(
-    String name,
-    String documentId,
-    String password
-) {
+        String firstName,
+        String lastName,
+        String email,
+        String documentId,
+        String password) {
 
 }
