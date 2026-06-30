@@ -5,7 +5,8 @@ public enum ErrorCatalog {
     BAD_CREDENTIALS("ERR_AUTH_001", "Bad credentials"),
     INVALID_CREDENTIALS("ERR_AUTH_002", "Invalid credentials or unauthorized client"),
     ROLE_NOT_FOUND("ERR_AUTH_003", "Role not found in Keycloak"),
-    USER_NOT_CREATED("ERR_AUTH_004", "User not created in Keycloak");
+    USER_NOT_CREATED("ERR_AUTH_004", "User not created in Keycloak"),
+    USER_NOT_UPDATED("ERR_AUTH_005", "user not updated in Keycloak");
 
     private final String code;
     private final String message;

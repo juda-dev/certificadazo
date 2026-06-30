@@ -1,4 +1,4 @@
-package dev.juda.auth_service.messaging.dto;
+package dev.juda.auth_service.messaging.dto.in;
 
 import java.util.UUID;
 

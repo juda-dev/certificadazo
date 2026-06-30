@@ -15,6 +15,7 @@ import dev.juda.auth_service.presentation.dto.response.ErrorResponse;
 import dev.juda.auth_service.service.exception.InvalidCredentialsException;
 import dev.juda.auth_service.service.exception.RoleNotFoundException;
 import dev.juda.auth_service.service.exception.UserNotCreatedException;
+import dev.juda.auth_service.service.exception.UserNotUpdatedException;
 
 import static dev.juda.auth_service.util.enums.ErrorCatalog.*;
 
@@ -23,10 +24,21 @@ public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(UserNotCreatedException.class)
+    public ErrorResponse hendleUserNotUpdatedException(UserNotUpdatedException ex) {
+        return new ErrorResponse(
+                USER_NOT_UPDATED.getCode(),
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                USER_NOT_UPDATED.getMessage(),
+                null,
+                LocalDateTime.now());
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(UserNotCreatedException.class)
     public ErrorResponse hendleUserNotCreatedException(UserNotCreatedException ex) {
         return new ErrorResponse(
                 USER_NOT_CREATED.getCode(),
-                HttpStatus.NOT_FOUND,
+                HttpStatus.INTERNAL_SERVER_ERROR,
                 USER_NOT_CREATED.getMessage(),
                 null,
                 LocalDateTime.now());

@@ -21,13 +21,15 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import dev.juda.auth_service.messaging.dto.CreateUserRequest;
+import dev.juda.auth_service.messaging.dto.in.CreateUserRequest;
+import dev.juda.auth_service.messaging.dto.in.UpdateUserRequest;
 import dev.juda.auth_service.presentation.dto.request.AuthRequest;
 import dev.juda.auth_service.presentation.dto.response.AuthResponse;
 import dev.juda.auth_service.presentation.dto.response.CreateUserReply;
 import dev.juda.auth_service.service.exception.InvalidCredentialsException;
 import dev.juda.auth_service.service.exception.RoleNotFoundException;
 import dev.juda.auth_service.service.exception.UserNotCreatedException;
+import dev.juda.auth_service.service.exception.UserNotUpdatedException;
 import dev.juda.auth_service.service.interfaces.AuthService;
 import dev.juda.auth_service.util.enums.Roles;
 import jakarta.ws.rs.NotFoundException;
@@ -145,5 +147,23 @@ public class AuthServiceImpl implements AuthService {
             throw new RuntimeException("Unexpected communication error with the authentication server", e);
         }
     }
+
+    @Override
+    public void update(UUID userId ,UpdateUserRequest req) {
+        try{
+            UserRepresentation user = new UserRepresentation();
+            user.setFirstName(req.firstName());
+            user.setLastName(req.lastName());
+            user.setEmail(req.email());
+            user.setEmailVerified(true);
+
+            keycloak.realm(realm).users().get(userId.toString())
+            .update(user);
+        } catch (Exception e){
+            throw new UserNotUpdatedException();
+        }
+    }
+
+    
 
 }

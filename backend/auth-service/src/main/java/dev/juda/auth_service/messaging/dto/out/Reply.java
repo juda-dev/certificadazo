@@ -1,4 +1,4 @@
-package dev.juda.auth_service.messaging.dto;
+package dev.juda.auth_service.messaging.dto.out;
 
 import dev.juda.auth_service.util.enums.ReplyStatus;
 
