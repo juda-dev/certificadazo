@@ -23,7 +23,7 @@ import static dev.juda.auth_service.util.enums.ErrorCatalog.*;
 public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(UserNotCreatedException.class)
+    @ExceptionHandler(UserNotUpdatedException.class)
     public ErrorResponse hendleUserNotUpdatedException(UserNotUpdatedException ex) {
         return new ErrorResponse(
                 USER_NOT_UPDATED.getCode(),
