@@ -18,12 +18,10 @@ import dev.juda.auth_service.util.enums.ReplyStatus;
 @Configuration
 public class UserCommandConsumer {
 
-    private final UpdateUserRequest updateUserRequest;
     private final AuthService authService;
 
-    public UserCommandConsumer(AuthService authService, UpdateUserRequest updateUserRequest) {
+    public UserCommandConsumer(AuthService authService) {
         this.authService = authService;
-        this.updateUserRequest = updateUserRequest;
     }
 
     @Bean
