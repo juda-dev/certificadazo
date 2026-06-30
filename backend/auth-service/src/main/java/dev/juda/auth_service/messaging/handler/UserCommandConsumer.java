@@ -1,4 +1,4 @@
-package dev.juda.auth_service.handlers;
+package dev.juda.auth_service.messaging.handler;
 
 import java.util.function.Function;
 
@@ -7,12 +7,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 
-import dev.juda.auth_service.models.dto.messaging.Command;
-import dev.juda.auth_service.models.dto.messaging.CreateUserRequest;
-import dev.juda.auth_service.models.dto.messaging.Reply;
-import dev.juda.auth_service.models.enums.CommandType;
-import dev.juda.auth_service.models.enums.ReplyStatus;
-import dev.juda.auth_service.services.AuthService;
+import dev.juda.auth_service.messaging.dto.Command;
+import dev.juda.auth_service.messaging.dto.CreateUserRequest;
+import dev.juda.auth_service.messaging.dto.Reply;
+import dev.juda.auth_service.service.interfaces.AuthService;
+import dev.juda.auth_service.util.enums.CommandType;
+import dev.juda.auth_service.util.enums.ReplyStatus;
 
 @Configuration
 public class UserCommandConsumer {

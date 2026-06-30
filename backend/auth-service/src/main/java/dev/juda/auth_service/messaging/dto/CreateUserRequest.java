@@ -1,4 +1,4 @@
-package dev.juda.auth_service.models.dto.messaging;
+package dev.juda.auth_service.messaging.dto;
 
 public record CreateUserRequest(
     String name,

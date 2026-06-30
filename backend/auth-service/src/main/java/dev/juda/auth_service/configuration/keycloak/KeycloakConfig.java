@@ -1,4 +1,4 @@
-package dev.juda.auth_service.config;
+package dev.juda.auth_service.configuration.keycloak;
 
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;

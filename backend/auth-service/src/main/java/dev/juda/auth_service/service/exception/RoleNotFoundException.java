@@ -1,4 +1,5 @@
-package dev.juda.auth_service.exceptions;
+package dev.juda.auth_service.service.exception;
 
 public class RoleNotFoundException extends RuntimeException{
+
 }

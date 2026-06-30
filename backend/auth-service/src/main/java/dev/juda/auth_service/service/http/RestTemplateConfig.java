@@ -1,4 +1,4 @@
-package dev.juda.auth_service.config;
+package dev.juda.auth_service.service.http;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
