@@ -139,6 +139,7 @@ public class AuthServiceImpl implements AuthService {
             throw new RuntimeException("Empty authentication response");
 
         } catch (HttpClientErrorException e) {
+            System.out.println(e.getMessage());
             throw new InvalidCredentialsException();
         } catch (Exception e) {
             throw new RuntimeException("Unexpected communication error with the authentication server", e);
