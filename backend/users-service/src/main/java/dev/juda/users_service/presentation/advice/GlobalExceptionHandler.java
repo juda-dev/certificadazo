@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import dev.juda.users_service.presentation.dto.response.ErrorResponse;
 import dev.juda.users_service.service.exception.CommandNotSentException;
+import dev.juda.users_service.service.exception.ExistingUserException;
 import dev.juda.users_service.service.exception.TimeoutCommandException;
 
 import static dev.juda.users_service.util.enums.ErrorCatalog.*;
@@ -19,6 +20,18 @@ import java.util.Collections;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(ExistingUserException.class)
+    public ErrorResponse handleExistingUserException(ExistingUserException ex){
+        return new ErrorResponse(
+            EXISTING_USER.getCode(),
+            HttpStatus.CONFLICT,
+            EXISTING_USER.getMessage()+ex.getField()+".",
+            null,
+            LocalDateTime.now()
+        );
+    }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(CommandNotSentException.class)
@@ -38,7 +51,7 @@ public class GlobalExceptionHandler {
         return new ErrorResponse(
             TIMEOUT_COMMAND.getCode(),
             HttpStatus.GATEWAY_TIMEOUT,
-            TIMEOUT_COMMAND.getMessage(),
+            TIMEOUT_COMMAND.getMessage()+ex.getMessage()+".",
             null,
             LocalDateTime.now()
         );

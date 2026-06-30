@@ -20,6 +20,7 @@ import dev.juda.users_service.persistence.repository.UserRepository;
 import dev.juda.users_service.presentation.dto.request.CreateUserRequest;
 import dev.juda.users_service.presentation.dto.response.CreateUserResponse;
 import dev.juda.users_service.service.exception.CommandNotSentException;
+import dev.juda.users_service.service.exception.ExistingUserException;
 import dev.juda.users_service.service.exception.TimeoutCommandException;
 import dev.juda.users_service.service.interfaces.UserService;
 import dev.juda.users_service.util.enums.CommandType;
@@ -42,6 +43,15 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public CreateUserResponse create(CreateUserRequest req) {
+
+        if (userRepository.existsByEmail(req.email())) {
+            throw new ExistingUserException("email address.");
+        }
+
+        if (userRepository.existsByDocumentId(req.documentId())) {
+            throw new ExistingUserException("document id.");
+        }
+
         var cmd = new Command<>(CommandType.CREATE, null, req);
 
         String correlationId = UUID.randomUUID().toString();
@@ -63,7 +73,7 @@ public class UserServiceImpl implements UserService {
         try {
             reply = (Reply<?>) future.get(Duration.ofSeconds(5).toMillis(), TimeUnit.MILLISECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutCommandException | TimeoutException e) {
-            throw new TimeoutCommandException("Timeout waiting for response from KeyCloak service");
+            throw new TimeoutCommandException("auth-service_CREATE");
         }
 
         ObjectMapper mapper = new ObjectMapper();
