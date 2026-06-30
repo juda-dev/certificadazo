@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
         return new ErrorResponse(
             EXISTING_USER.getCode(),
             HttpStatus.CONFLICT,
-            EXISTING_USER.getMessage()+ex.getField()+".",
+            EXISTING_USER.getMessage()+ex.getField(),
             null,
             LocalDateTime.now()
         );
@@ -51,7 +51,7 @@ public class GlobalExceptionHandler {
         return new ErrorResponse(
             TIMEOUT_COMMAND.getCode(),
             HttpStatus.GATEWAY_TIMEOUT,
-            TIMEOUT_COMMAND.getMessage()+ex.getMessage()+".",
+            TIMEOUT_COMMAND.getMessage()+ex.getMessage(),
             null,
             LocalDateTime.now()
         );
