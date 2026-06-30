@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.GATEWAY_TIMEOUT)
-    @ExceptionHandler(CommandNotSentException.class)
+    @ExceptionHandler(TimeoutCommandException.class)
     public ErrorResponse handleTimeoutCommandException(TimeoutCommandException ex){
         return new ErrorResponse(
             TIMEOUT_COMMAND.getCode(),
