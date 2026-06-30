@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import dev.juda.users_service.messaging.dto.in.Reply;
 import dev.juda.users_service.presentation.dto.request.CreateUserRequest;
+import dev.juda.users_service.presentation.dto.request.PasswordChangeRequest;
 import dev.juda.users_service.presentation.dto.request.UpdateUserRequest;
 import dev.juda.users_service.presentation.dto.response.UserResponse;
 import dev.juda.users_service.service.interfaces.UserService;
@@ -33,5 +35,10 @@ public class UserController {
     @PutMapping("/update/{id}")
     public UserResponse update(@PathVariable UUID id, @Valid @RequestBody UpdateUserRequest req) {
         return userService.update(id, req);
+    }
+
+    @PutMapping("/update/password/{id}")
+    public Reply<String> updatePassword(@PathVariable UUID id, @Valid @RequestBody PasswordChangeRequest req){
+        return userService.updatePassword(id, req);
     }
 }
