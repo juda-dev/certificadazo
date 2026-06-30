@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 
+import tools.jackson.databind.ObjectMapper;
+
 import dev.juda.auth_service.messaging.dto.in.Command;
 import dev.juda.auth_service.messaging.dto.in.CreateUserRequest;
 import dev.juda.auth_service.messaging.dto.in.UpdateUserRequest;
@@ -19,9 +21,11 @@ import dev.juda.auth_service.util.enums.ReplyStatus;
 public class UserCommandConsumer {
 
     private final AuthService authService;
+    private final ObjectMapper mapper;
 
-    public UserCommandConsumer(AuthService authService) {
+    public UserCommandConsumer(AuthService authService, ObjectMapper mapper) {
         this.authService = authService;
+        this.mapper = mapper;
     }
 
     @Bean
@@ -41,7 +45,7 @@ public class UserCommandConsumer {
                         yield new Reply<>(ReplyStatus.ERROR, "Create Empty body", null);
                     }
 
-                    CreateUserRequest createUserRequest = (CreateUserRequest) cmd.body();
+                    CreateUserRequest createUserRequest = mapper.convertValue(cmd.body(), CreateUserRequest.class);
 
                     yield new Reply<>(ReplyStatus.SUCCESS, "User created", authService.create(createUserRequest));
                 }
@@ -55,7 +59,7 @@ public class UserCommandConsumer {
                         yield new Reply<>(ReplyStatus.ERROR, "User Keycloak Id is null", null);
                     }
 
-                    UpdateUserRequest updateUserRequest = (UpdateUserRequest) cmd.body();
+                    UpdateUserRequest updateUserRequest = mapper.convertValue(cmd.body(), UpdateUserRequest.class);
 
                     authService.update(cmd.id(), updateUserRequest);
 

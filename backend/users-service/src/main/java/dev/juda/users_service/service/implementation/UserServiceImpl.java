@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
                 .setHeader("correlationId", correlationId)
                 .build();
 
-        boolean sent = this.streamBridge.send("commands-out-0.", msg);
+        boolean sent = this.streamBridge.send("commands-out-0", msg);
 
         if (!sent) {
             throw new CommandNotSentException();
@@ -106,7 +106,7 @@ public class UserServiceImpl implements UserService {
                     .setHeader("correlationId", correlationId)
                     .build();
 
-        boolean sent = this.streamBridge.send("commands-out-0.", msg);
+        boolean sent = this.streamBridge.send("commands-out-0", msg);
 
         if (!sent) {
             throw new CommandNotSentException();
