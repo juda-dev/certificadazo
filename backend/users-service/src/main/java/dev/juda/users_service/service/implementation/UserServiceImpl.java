@@ -94,11 +94,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Reply<String> updatePassword(UUID id, PasswordChangeRequest req) {
-        if (!userRepository.existsById(id)) {
-            throw new NonExistentUser();
-        }
+        UserEntity user = userRepository.findById(id).orElseThrow(NonExistentUser::new);
 
-        var cmd = new Command<>(CommandType.PASSWORD_UPDATE, id, req);
+        var cmd = new Command<>(CommandType.PASSWORD_UPDATE, user.getKeycloackId(), req);
 
         Reply<String> reply = mapper.convertValue(getReply(cmd, "PASSWORD_UPDATE"), new TypeReference<Reply<String>>() {
         });
