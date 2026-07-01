@@ -22,8 +22,11 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import dev.juda.auth_service.messaging.dto.in.CreateUserRequest;
+import dev.juda.auth_service.messaging.dto.in.PasswordChangeRequest;
 import dev.juda.auth_service.messaging.dto.in.UpdateUserRequest;
+import dev.juda.auth_service.messaging.dto.out.Reply;
 import dev.juda.auth_service.presentation.dto.request.AuthRequest;
+import dev.juda.auth_service.presentation.dto.request.KeycloakPasswordUpdate;
 import dev.juda.auth_service.presentation.dto.response.AuthResponse;
 import dev.juda.auth_service.presentation.dto.response.CreateUserReply;
 import dev.juda.auth_service.service.exception.InvalidCredentialsException;
@@ -31,6 +34,7 @@ import dev.juda.auth_service.service.exception.RoleNotFoundException;
 import dev.juda.auth_service.service.exception.UserNotCreatedException;
 import dev.juda.auth_service.service.exception.UserNotUpdatedException;
 import dev.juda.auth_service.service.interfaces.AuthService;
+import dev.juda.auth_service.util.enums.ReplyStatus;
 import dev.juda.auth_service.util.enums.Roles;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.core.Response;
@@ -100,16 +104,6 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
-    private void setPassword(String userId, String password) {
-        CredentialRepresentation credential = new CredentialRepresentation();
-        credential.setType(CredentialRepresentation.PASSWORD);
-        credential.setValue(password);
-        credential.setTemporary(false);
-
-        keycloak.realm(realm).users().get(userId)
-                .resetPassword(credential);
-    }
-
     @Override
     public AuthResponse login(AuthRequest req) {
         try {
@@ -126,6 +120,7 @@ public class AuthServiceImpl implements AuthService {
             HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(body, headers);
 
             String tokenUrl = keycloakServerUrl + "/realms/" + realm + "/protocol/openid-connect/token";
+
             ResponseEntity<Map> response = restTemplate.postForEntity(tokenUrl, entity, Map.class);
 
             if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
@@ -141,7 +136,6 @@ public class AuthServiceImpl implements AuthService {
             throw new RuntimeException("Empty authentication response");
 
         } catch (HttpClientErrorException e) {
-            System.out.println(e.getMessage());
             throw new InvalidCredentialsException();
         } catch (Exception e) {
             throw new RuntimeException("Unexpected communication error with the authentication server", e);
@@ -149,8 +143,8 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void update(UUID userId ,UpdateUserRequest req) {
-        try{
+    public void update(UUID userId, UpdateUserRequest req) {
+        try {
             UserRepresentation user = new UserRepresentation();
             user.setFirstName(req.firstName());
             user.setLastName(req.lastName());
@@ -158,12 +152,47 @@ public class AuthServiceImpl implements AuthService {
             user.setEmailVerified(true);
 
             keycloak.realm(realm).users().get(userId.toString())
-            .update(user);
-        } catch (Exception e){
+                    .update(user);
+        } catch (Exception e) {
             throw new UserNotUpdatedException();
         }
     }
 
-    
+    @Override
+    public Reply<String> updatePassword(UUID userId, PasswordChangeRequest req) {
+        try {
+            UserResource userResource = keycloak.realm(realm).users().get(userId.toString());
+            UserRepresentation user = userResource.toRepresentation();
+
+            try {
+                login(new AuthRequest(user.getUsername(), req.currentPassword()));
+            } catch (InvalidCredentialsException e) {
+                return new Reply<>(
+                        ReplyStatus.ERROR,
+                        "The current password is incorrect.",
+                        null);
+            }
+
+            return new Reply<>(ReplyStatus.SUCCESS, "Password successfully updated", null);
+
+        } catch (NotFoundException e) {
+            return new Reply<>(ReplyStatus.ERROR, "User not found.", null);
+        } catch (Exception e) {
+            return new Reply<>(
+                    ReplyStatus.ERROR,
+                    "The password was not updated. Please check that your current password is correct and that your new password meets the password requirements.",
+                    null);
+        }
+    }
+
+    private void setPassword(String userId, String password) {
+        CredentialRepresentation credential = new CredentialRepresentation();
+        credential.setType(CredentialRepresentation.PASSWORD);
+        credential.setValue(password);
+        credential.setTemporary(false);
+
+        keycloak.realm(realm).users().get(userId)
+                .resetPassword(credential);
+    }
 
 }

@@ -11,6 +11,7 @@ import tools.jackson.databind.ObjectMapper;
 
 import dev.juda.auth_service.messaging.dto.in.Command;
 import dev.juda.auth_service.messaging.dto.in.CreateUserRequest;
+import dev.juda.auth_service.messaging.dto.in.PasswordChangeRequest;
 import dev.juda.auth_service.messaging.dto.in.UpdateUserRequest;
 import dev.juda.auth_service.messaging.dto.out.Reply;
 import dev.juda.auth_service.service.interfaces.AuthService;
@@ -29,17 +30,17 @@ public class UserCommandConsumer {
     }
 
     @Bean
-    public Function<Message<Command<CreateUserRequest>>, Message<Reply<Object>>> handleCommands(){
+    public Function<Message<Command<Object>>, Message<Reply<Object>>> handleCommands() {
         return msg -> {
             String correlationId = msg.getHeaders().get("correlationId").toString();
             if (correlationId == null || correlationId.isBlank()) {
-                return MessageBuilder.withPayload(new Reply<>(ReplyStatus.ERROR, "Missing correlationId",null))
-                .build();
+                return MessageBuilder.withPayload(new Reply<>(ReplyStatus.ERROR, "Missing correlationId", null))
+                        .build();
             }
 
             Command<?> cmd = msg.getPayload();
 
-            Reply<Object> reply = switch(cmd.type()) {
+            Reply<Object> reply = switch (cmd.type()) {
                 case CommandType.CREATE -> {
                     if (cmd.body() == null) {
                         yield new Reply<>(ReplyStatus.ERROR, "Create Empty body", null);
@@ -64,6 +65,23 @@ public class UserCommandConsumer {
                     authService.update(cmd.id(), updateUserRequest);
 
                     yield new Reply<>(ReplyStatus.SUCCESS, "User updated", null);
+                }
+
+                case CommandType.PASSWORD_UPDATE -> {
+                    if (cmd.body() == null) {
+                        yield new Reply<>(ReplyStatus.ERROR, "Update Empty body", null);
+                    }
+
+                    if (cmd.id() == null) {
+                        yield new Reply<>(ReplyStatus.ERROR, "User Keycloak Id is null", null);
+                    }
+
+                    PasswordChangeRequest passwordChangeRequest = mapper.convertValue(cmd.body(),
+                            PasswordChangeRequest.class);
+
+                    Reply<String> rep = authService.updatePassword(cmd.id(), passwordChangeRequest);
+
+                    yield new Reply<>(rep.status(), rep.message(), null);
                 }
 
                 default -> {
