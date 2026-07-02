@@ -108,6 +108,19 @@ public class UserServiceImpl implements UserService {
         };
     }
 
+    @Override
+    @Transactional
+    public void delete(UUID id) {
+        UserEntity userEntity = userRepository.findByIdAndEnabledTrue(id).orElseThrow(NonExistentUser::new);
+
+        var cmd = new Command<>(CommandType.DELETE, userEntity.getKeycloackId(), null);
+
+        getReply(cmd, "DELETE");
+
+        userEntity.setEnabled(false);
+        userRepository.save(userEntity);
+    }
+
     private Reply<?> getReply(Command<?> cmd, String methodName) {
         String correlationId = UUID.randomUUID().toString();
         var future = replyInbox.register(correlationId);

@@ -14,4 +14,5 @@ public interface UserService {
     UserResponse create(CreateUserRequest req);
     UserResponse update(UUID id, UpdateUserRequest req);
     ResponseEntity<Reply<?>> updatePassword(UUID id, PasswordChangeRequest req);
+    void delete(UUID id);
 }
