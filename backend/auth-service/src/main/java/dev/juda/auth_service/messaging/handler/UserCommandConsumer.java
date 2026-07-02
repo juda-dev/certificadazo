@@ -84,6 +84,16 @@ public class UserCommandConsumer {
                     yield new Reply<>(rep.status(), rep.message(), null);
                 }
 
+                case CommandType.DELETE -> {
+                    if (cmd.id() == null) {
+                        yield new Reply<>(ReplyStatus.ERROR, "User Keycloak Id is null", null);
+                    }
+
+                    authService.delete(cmd.id());
+
+                    yield new Reply<>(ReplyStatus.SUCCESS, null, null);
+                }
+
                 default -> {
                     yield new Reply<>(ReplyStatus.ERROR, "Unknown command type", null);
                 }

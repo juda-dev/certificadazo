@@ -187,12 +187,6 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
-    @Override
-    public void delete(UUID userId) {
-        // TODO Auto-generated method stub
-
-    }
-
     private void setPassword(String userId, String password) {
         CredentialRepresentation credential = new CredentialRepresentation();
         credential.setType(CredentialRepresentation.PASSWORD);
@@ -203,4 +197,13 @@ public class AuthServiceImpl implements AuthService {
                 .resetPassword(credential);
     }
 
+    @Override
+    public void delete(UUID userId) {
+        UserResource userResource = keycloak.realm(realm).users().get(userId.toString());
+        UserRepresentation user = userResource.toRepresentation();
+        user.setEnabled(false);
+
+        keycloak.realm(realm).users().get(userId.toString())
+                .update(user);
+    }
 }

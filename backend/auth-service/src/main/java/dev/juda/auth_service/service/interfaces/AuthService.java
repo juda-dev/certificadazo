@@ -15,4 +15,5 @@ public interface AuthService {
     AuthResponse login(AuthRequest req);
     void update(UUID userId ,UpdateUserRequest req);
     Reply<?> updatePassword(UUID userId, PasswordChangeRequest req);
+    void delete(UUID userId);
 }
