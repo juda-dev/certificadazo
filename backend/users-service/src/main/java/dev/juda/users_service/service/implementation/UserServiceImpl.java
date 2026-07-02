@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import org.springframework.cloud.stream.function.StreamBridge;
+import org.springframework.http.ResponseEntity;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -93,7 +94,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Reply<?> updatePassword(UUID id, PasswordChangeRequest req) {
+    public ResponseEntity<Reply<?>> updatePassword(UUID id, PasswordChangeRequest req) {
         UserEntity user = userRepository.findById(id).orElseThrow(NonExistentUser::new);
 
         var cmd = new Command<>(CommandType.PASSWORD_UPDATE, user.getKeycloackId(), req);
@@ -101,7 +102,10 @@ public class UserServiceImpl implements UserService {
         Reply<?> reply = mapper.convertValue(getReply(cmd, "PASSWORD_UPDATE"), new TypeReference<Reply<?>>() {
         });
 
-        return reply;
+        return switch (reply.status()) {
+            case SUCCESS -> ResponseEntity.ok(reply);
+            case ERROR -> ResponseEntity.badRequest().body(reply);
+        };
     }
 
     private Reply<?> getReply(Command<?> cmd, String methodName) {

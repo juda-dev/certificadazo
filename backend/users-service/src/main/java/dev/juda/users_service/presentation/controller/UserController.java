@@ -2,6 +2,7 @@ package dev.juda.users_service.presentation.controller;
 
 import java.util.UUID;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -38,7 +39,8 @@ public class UserController {
     }
 
     @PutMapping("/update/password/{id}")
-    public Reply<?> updatePassword(@PathVariable UUID id, @Valid @RequestBody PasswordChangeRequest req){
+    public ResponseEntity<Reply<?>> updatePassword(@PathVariable UUID id,
+            @Valid @RequestBody PasswordChangeRequest req) {
         return userService.updatePassword(id, req);
     }
 }
