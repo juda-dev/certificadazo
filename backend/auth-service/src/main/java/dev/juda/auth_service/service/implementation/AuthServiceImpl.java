@@ -159,7 +159,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public Reply<String> updatePassword(UUID userId, PasswordChangeRequest req) {
+    public Reply<?> updatePassword(UUID userId, PasswordChangeRequest req) {
         try {
             UserResource userResource = keycloak.realm(realm).users().get(userId.toString());
             UserRepresentation user = userResource.toRepresentation();

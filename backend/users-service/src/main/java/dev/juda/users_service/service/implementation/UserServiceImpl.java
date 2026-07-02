@@ -93,12 +93,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Reply<String> updatePassword(UUID id, PasswordChangeRequest req) {
+    public Reply<?> updatePassword(UUID id, PasswordChangeRequest req) {
         UserEntity user = userRepository.findById(id).orElseThrow(NonExistentUser::new);
 
         var cmd = new Command<>(CommandType.PASSWORD_UPDATE, user.getKeycloackId(), req);
 
-        Reply<String> reply = mapper.convertValue(getReply(cmd, "PASSWORD_UPDATE"), new TypeReference<Reply<String>>() {
+        Reply<?> reply = mapper.convertValue(getReply(cmd, "PASSWORD_UPDATE"), new TypeReference<Reply<?>>() {
         });
 
         return reply;

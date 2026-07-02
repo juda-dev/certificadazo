@@ -11,5 +11,5 @@ import dev.juda.users_service.presentation.dto.response.UserResponse;
 public interface UserService {
     UserResponse create(CreateUserRequest req);
     UserResponse update(UUID id, UpdateUserRequest req);
-    Reply<String> updatePassword(UUID id, PasswordChangeRequest req);
+    Reply<?> updatePassword(UUID id, PasswordChangeRequest req);
 }

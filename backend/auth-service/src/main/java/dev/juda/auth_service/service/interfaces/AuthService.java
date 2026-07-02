@@ -14,5 +14,5 @@ public interface AuthService {
     CreateUserReply create(CreateUserRequest req);
     AuthResponse login(AuthRequest req);
     void update(UUID userId ,UpdateUserRequest req);
-    Reply<String> updatePassword(UUID userId, PasswordChangeRequest req);
+    Reply<?> updatePassword(UUID userId, PasswordChangeRequest req);
 }

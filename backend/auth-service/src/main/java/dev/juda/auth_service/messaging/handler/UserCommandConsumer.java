@@ -79,7 +79,7 @@ public class UserCommandConsumer {
                     PasswordChangeRequest passwordChangeRequest = mapper.convertValue(cmd.body(),
                             PasswordChangeRequest.class);
 
-                    Reply<String> rep = authService.updatePassword(cmd.id(), passwordChangeRequest);
+                    Reply<?> rep = authService.updatePassword(cmd.id(), passwordChangeRequest);
 
                     yield new Reply<>(rep.status(), rep.message(), null);
                 }

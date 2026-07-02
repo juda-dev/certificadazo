@@ -38,7 +38,7 @@ public class UserController {
     }
 
     @PutMapping("/update/password/{id}")
-    public Reply<String> updatePassword(@PathVariable UUID id, @Valid @RequestBody PasswordChangeRequest req){
+    public Reply<?> updatePassword(@PathVariable UUID id, @Valid @RequestBody PasswordChangeRequest req){
         return userService.updatePassword(id, req);
     }
 }
