@@ -11,22 +11,19 @@ import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestClientException;
 
 import dev.juda.auth_service.messaging.dto.in.CreateUserRequest;
 import dev.juda.auth_service.messaging.dto.in.PasswordChangeRequest;
 import dev.juda.auth_service.messaging.dto.in.UpdateUserRequest;
 import dev.juda.auth_service.messaging.dto.out.Reply;
 import dev.juda.auth_service.presentation.dto.request.AuthRequest;
-import dev.juda.auth_service.presentation.dto.request.KeycloakPasswordUpdate;
 import dev.juda.auth_service.presentation.dto.response.AuthResponse;
 import dev.juda.auth_service.presentation.dto.response.CreateUserReply;
 import dev.juda.auth_service.service.exception.InvalidCredentialsException;
@@ -42,7 +39,7 @@ import jakarta.ws.rs.core.Response;
 @Service
 public class AuthServiceImpl implements AuthService {
 
-    private final RestTemplate restTemplate;
+    private final RestClient restClient;
     private final Keycloak keycloak;
 
     @Value("${keycloak.server-url}")
@@ -57,8 +54,8 @@ public class AuthServiceImpl implements AuthService {
     @Value("${keycloak.client-secret}")
     private String clientSecret;
 
-    public AuthServiceImpl(Keycloak keycloak, RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
+    public AuthServiceImpl(Keycloak keycloak, RestClient restClient) {
+        this.restClient = restClient;
         this.keycloak = keycloak;
     }
 
@@ -106,38 +103,36 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse login(AuthRequest req) {
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("client_id", clientId);
+        body.add("client_secret", clientSecret);
+        body.add("username", req.username());
+        body.add("password", req.password());
+        body.add("grant_type", "password");
+
+        String tokenUrl = keycloakServerUrl + "/realms/" + realm + "/protocol/openid-connect/token";
+
         try {
-            MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-            body.add("client_id", clientId);
-            body.add("client_secret", clientSecret);
-            body.add("username", req.username());
-            body.add("password", req.password());
-            body.add("grant_type", "password");
+            var tokenData = restClient.post()
+                    .uri(tokenUrl)
+                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                    .body(body)
+                    .retrieve()
+                    .body(Map.class);
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-
-            HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(body, headers);
-
-            String tokenUrl = keycloakServerUrl + "/realms/" + realm + "/protocol/openid-connect/token";
-
-            ResponseEntity<Map> response = restTemplate.postForEntity(tokenUrl, entity, Map.class);
-
-            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
-                Map<String, Object> tokenData = response.getBody();
-                AuthResponse authResponse = new AuthResponse(
-                        (String) tokenData.get("access_token"),
-                        (String) tokenData.get("refresh_token"),
-                        ((Number) tokenData.get("expires_in")).intValue(),
-                        (String) tokenData.get("token_type"));
-                return authResponse;
+            if (tokenData == null) {
+                throw new RuntimeException("Empty authentication response");
             }
 
-            throw new RuntimeException("Empty authentication response");
+            return new AuthResponse(
+                    (String) tokenData.get("access_token"),
+                    (String) tokenData.get("refresh_token"),
+                    ((Number) tokenData.get("expires_in")).intValue(),
+                    (String) tokenData.get("token_type"));
 
         } catch (HttpClientErrorException e) {
             throw new InvalidCredentialsException();
-        } catch (Exception e) {
+        } catch (RestClientException e) {
             throw new RuntimeException("Unexpected communication error with the authentication server", e);
         }
     }
