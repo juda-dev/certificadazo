@@ -173,6 +173,8 @@ public class AuthServiceImpl implements AuthService {
                         null);
             }
 
+            setPassword(userId.toString(), req.newPassword());
+
             return new Reply<>(ReplyStatus.SUCCESS, "Password successfully updated", null);
 
         } catch (NotFoundException e) {
@@ -183,6 +185,12 @@ public class AuthServiceImpl implements AuthService {
                     "The password was not updated. Please check that your current password is correct and that your new password meets the password requirements.",
                     null);
         }
+    }
+
+    @Override
+    public void delete(UUID userId) {
+        // TODO Auto-generated method stub
+
     }
 
     private void setPassword(String userId, String password) {
