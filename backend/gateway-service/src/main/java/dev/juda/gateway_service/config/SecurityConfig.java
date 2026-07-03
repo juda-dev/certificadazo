@@ -12,7 +12,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final String[] PUBLIC_ENDPOINTS = {
-        "/api/auth/login"
+        "/**"
     };
 
     private final String[] ADMIN_ENDPOINTS = {};

@@ -24,10 +24,19 @@ spring:
               filters:
                 - TokenRelay=
                 - StripPrefix=1
+
             - id: users-service
               uri: lb://users-service
               predicates:
                 - Path=/api/users/**
+              filters:
+                - TokenRelay=
+                - StripPrefix=1
+
+            - id: departments-service
+              uri: lb://departments-service
+              predicates:
+                - Path=/api/departments/**
               filters:
                 - TokenRelay=
                 - StripPrefix=1

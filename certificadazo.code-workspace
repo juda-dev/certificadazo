@@ -22,7 +22,7 @@
 		},
 		{
 			"name": "Departments 🧑‍🧒‍🧒",
-			"path": "backend/department-service"
+			"path": "backend/departments-service"
 		}
 	],
 	"settings": {

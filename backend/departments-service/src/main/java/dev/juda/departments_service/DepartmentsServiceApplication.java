@@ -1,4 +1,4 @@
-package dev.juda.department_service;
+package dev.juda.departments_service;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
