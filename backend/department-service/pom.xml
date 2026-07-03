@@ -9,9 +9,9 @@
 		<relativePath/> 
 	</parent>
 	<groupId>dev.juda</groupId>
-	<artifactId>department-service</artifactId>
+	<artifactId>departments-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>department-service</name>
+	<name>departments-service</name>
 
 	<properties>
 		<java.version>25</java.version>

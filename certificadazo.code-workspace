@@ -21,7 +21,7 @@
 			"path": "backend/users-service"
 		},
 		{
-			"name": "Department 🧑‍🧒‍🧒",
+			"name": "Departments 🧑‍🧒‍🧒",
 			"path": "backend/department-service"
 		}
 	],
