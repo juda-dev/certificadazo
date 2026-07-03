@@ -1,5 +1,6 @@
 volumes:
-  mysql-data:
+  mysql-users:
+  mysql-departments:
   kafka-data:
   keycloak-data:
 
@@ -17,7 +18,26 @@ services:
     ports:
       - "3300:3306"
     volumes:
-      - mysql-data:/var/lib/mysql
+      - mysql-users:/var/lib/mysql
+    networks:
+      - certificadazo-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-judadev}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  mysql-departments:
+    image: mysql:latest
+    container_name: mysql-departments
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-judadev}
+    ports:
+      - "3301:3306"
+    volumes:
+      - mysql-departments:/var/lib/mysql
     networks:
       - certificadazo-network
     healthcheck:
@@ -54,7 +74,7 @@ services:
     entrypoint: >
       bash -c "
       /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9092 --create --if-not-exists --topic users-events --partitions 1 --replication-factor 1 &&
-      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9092 --create --if-not-exists --topic keycloak-replies --partitions 1 --replication-factor 1 &&
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9092 --create --if-not-exists --topic keycloak-replies --partitions 1 --replication-factor 1
       "
     networks:
       - certificadazo-network
@@ -72,6 +92,8 @@ services:
       - --metrics-enabled=true
     depends_on:
       mysql-users:
+        condition: service_healthy
+      kafka:
         condition: service_healthy
     environment:
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN_USERNAME:-admin}
