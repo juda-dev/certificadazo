@@ -19,6 +19,10 @@
 		{
 			"name": "Users 👫🏿",
 			"path": "backend/users-service"
+		},
+		{
+			"name": "Department 🧑‍🧒‍🧒",
+			"path": "backend/department-service"
 		}
 	],
 	"settings": {
