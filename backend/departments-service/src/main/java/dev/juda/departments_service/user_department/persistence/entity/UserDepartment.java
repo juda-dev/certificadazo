@@ -14,6 +14,13 @@ public class UserDepartment {
     @EmbeddedId
     private UserDepartmentId id;
 
+    public UserDepartment() {
+    }
+
+    public UserDepartment(UserDepartmentId id) {
+        this.id = id;
+    }
+
     public UserDepartmentId getId() {
         return id;
     }

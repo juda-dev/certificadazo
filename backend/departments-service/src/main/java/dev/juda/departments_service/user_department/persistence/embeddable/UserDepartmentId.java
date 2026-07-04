@@ -9,10 +9,10 @@ import jakarta.persistence.Embeddable;
 @Embeddable
 public record UserDepartmentId(
 
-        @Column(name = "user_id") UUID userId,
+                @Column(name = "user_id") UUID userId,
 
-        @Column(name = "department_id") UUID departmentId,
+                @Column(name = "department_id") UUID departmentId,
 
-        @Column(name = "position_id") UUID positionId) implements Serializable {
+                @Column(name = "position_id") UUID positionId) implements Serializable {
 
 }
