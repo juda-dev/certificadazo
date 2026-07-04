@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -17,6 +18,7 @@ import dev.juda.users_service.messaging.dto.in.Reply;
 import dev.juda.users_service.presentation.dto.request.CreateUserRequest;
 import dev.juda.users_service.presentation.dto.request.PasswordChangeRequest;
 import dev.juda.users_service.presentation.dto.request.UpdateUserRequest;
+import dev.juda.users_service.presentation.dto.response.UserFullNameView;
 import dev.juda.users_service.presentation.dto.response.UserResponse;
 import dev.juda.users_service.service.interfaces.UserService;
 import jakarta.validation.Valid;
@@ -50,7 +52,12 @@ public class UserController {
 
     @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable UUID id){
+    public void delete(@PathVariable UUID id) {
         userService.delete(id);
+    }
+
+    @GetMapping("/user-fullname-view/{id}")
+    public UserFullNameView userFullNameView(@PathVariable UUID id) {
+        return userService.userFullNameView(id);
     }
 }

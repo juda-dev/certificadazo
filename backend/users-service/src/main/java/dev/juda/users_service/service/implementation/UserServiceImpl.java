@@ -21,6 +21,7 @@ import dev.juda.users_service.persistence.repository.UserRepository;
 import dev.juda.users_service.presentation.dto.request.CreateUserRequest;
 import dev.juda.users_service.presentation.dto.request.PasswordChangeRequest;
 import dev.juda.users_service.presentation.dto.request.UpdateUserRequest;
+import dev.juda.users_service.presentation.dto.response.UserFullNameView;
 import dev.juda.users_service.presentation.dto.response.UserResponse;
 import dev.juda.users_service.service.exception.CommandNotSentException;
 import dev.juda.users_service.service.exception.ExistingUserException;
@@ -145,6 +146,14 @@ public class UserServiceImpl implements UserService {
         }
 
         return reply;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserFullNameView userFullNameView(UUID id) {
+        UserEntity user = userRepository.findById(id).orElseThrow(NonExistentUser::new);
+
+        return new UserFullNameView(user.getFirstName() + " " + user.getLastName());
     }
 
 }
