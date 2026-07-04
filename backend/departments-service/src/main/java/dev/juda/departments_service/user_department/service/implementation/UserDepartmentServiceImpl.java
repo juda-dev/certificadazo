@@ -12,7 +12,7 @@ import org.springframework.web.client.RestClient;
 
 import dev.juda.departments_service.department.persistence.entity.Department;
 import dev.juda.departments_service.department.persistence.repository.DepartmentRepository;
-import dev.juda.departments_service.department.presentation.exception.DepartmentNotFound;
+import dev.juda.departments_service.department.presentation.exception.DepartmentNotFoundException;
 import dev.juda.departments_service.position.persistence.entity.Position;
 import dev.juda.departments_service.position.persistence.repository.PositionRepository;
 import dev.juda.departments_service.position.presentation.exception.PositionNotFoundException;
@@ -69,7 +69,7 @@ public class UserDepartmentServiceImpl implements UserDepartmentService {
                         us -> departmentRepository
                                 .findById(us.getId()
                                         .departmentId())
-                                .orElseThrow(DepartmentNotFound::new))
+                                .orElseThrow(DepartmentNotFoundException::new))
                 .toList();
     }
 
@@ -94,7 +94,7 @@ public class UserDepartmentServiceImpl implements UserDepartmentService {
 
     private UserDepartmentResponse persistUserDepartment(UserDepartmentRequest req, UserFullNameView userFullNameView) {
         Department department = departmentRepository.findById(req.departmentId())
-                .orElseThrow(DepartmentNotFound::new);
+                .orElseThrow(DepartmentNotFoundException::new);
         Position position = positionRepository.findById(req.positionId())
                 .orElseThrow(PositionNotFoundException::new);
 

@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.client.RestClient;
 
-import dev.juda.departments_service.user_department.presentation.exception.NonExistsUser;
+import dev.juda.departments_service.user_department.presentation.exception.NonExistsUserException;
 
 @Configuration
 public class HttpClientConfig {
@@ -29,7 +29,7 @@ public class HttpClientConfig {
         return builder
                 .baseUrl("http://users-service")
                 .defaultStatusHandler(HttpStatusCode::is4xxClientError, (request, response) -> {
-                    throw new NonExistsUser();
+                    throw new NonExistsUserException();
                 })
                 .build();
     }

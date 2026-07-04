@@ -11,7 +11,7 @@ import dev.juda.departments_service.department.persistence.entity.Department;
 import dev.juda.departments_service.department.persistence.repository.DepartmentRepository;
 import dev.juda.departments_service.department.presentation.dto.request.DepartmentRequest;
 import dev.juda.departments_service.department.presentation.exception.DepartmentAlreadyExistsException;
-import dev.juda.departments_service.department.presentation.exception.DepartmentNotFound;
+import dev.juda.departments_service.department.presentation.exception.DepartmentNotFoundException;
 import dev.juda.departments_service.department.service.interfaces.DepartmentService;
 
 @Service
@@ -38,7 +38,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Transactional
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void delete(UUID id) {
-        Department department = repository.findById(id).orElseThrow(DepartmentNotFound::new);
+        Department department = repository.findById(id).orElseThrow(DepartmentNotFoundException::new);
 
         repository.delete(department);
     }
@@ -46,7 +46,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     @Transactional
     public Department update(UUID id, DepartmentRequest req) {
-        Department department = repository.findById(id).orElseThrow(DepartmentNotFound::new);
+        Department department = repository.findById(id).orElseThrow(DepartmentNotFoundException::new);
 
         if (repository.existsByName(req.name())) {
             throw new DepartmentAlreadyExistsException();

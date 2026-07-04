@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import dev.juda.departments_service.department.persistence.entity.Department;
 import dev.juda.departments_service.department.persistence.repository.DepartmentRepository;
-import dev.juda.departments_service.department.presentation.exception.DepartmentNotFound;
+import dev.juda.departments_service.department.presentation.exception.DepartmentNotFoundException;
 import dev.juda.departments_service.position.persistence.entity.Position;
 import dev.juda.departments_service.position.persistence.repository.PositionRepository;
 import dev.juda.departments_service.position.presentation.dto.request.PositionRequest;
@@ -39,7 +39,7 @@ public class PositionServiceImpl implements PositionService {
             throw new PositionAlreadyExistsException();
         }
 
-        Department department = departmentRepository.findById(req.departmentId()).orElseThrow(DepartmentNotFound::new);
+        Department department = departmentRepository.findById(req.departmentId()).orElseThrow(DepartmentNotFoundException::new);
 
         Position position = new Position(req.name(), department);
 
@@ -76,7 +76,7 @@ public class PositionServiceImpl implements PositionService {
             throw new PositionAlreadyExistsException();
         }
 
-        Department department = departmentRepository.findById(req.departmentId()).orElseThrow(DepartmentNotFound::new);
+        Department department = departmentRepository.findById(req.departmentId()).orElseThrow(DepartmentNotFoundException::new);
 
         position.setName(req.name());
         position.setDepartment(department);
