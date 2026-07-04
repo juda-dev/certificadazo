@@ -4,8 +4,10 @@ import dev.juda.departments_service.user_department.presentation.dto.in.UserFull
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.client.RestClient;
 
 import dev.juda.departments_service.department.persistence.entity.Department;
@@ -20,6 +22,7 @@ import dev.juda.departments_service.user_department.persistence.repository.UserD
 import dev.juda.departments_service.user_department.presentation.dto.request.DeleteUserDepartmentRequest;
 import dev.juda.departments_service.user_department.presentation.dto.request.UserDepartmentRequest;
 import dev.juda.departments_service.user_department.presentation.dto.response.UserDepartmentResponse;
+import dev.juda.departments_service.user_department.presentation.exception.UserDepartmentNotFoundException;
 import dev.juda.departments_service.user_department.service.interfaces.UserDepartmentService;
 
 @Service
@@ -42,38 +45,69 @@ public class UserDepartmentServiceImpl implements UserDepartmentService {
     @Override
     @Transactional
     public UserDepartmentResponse create(UserDepartmentRequest req) {
-        UserFullNameView userFullNameView = restClient.get()
-                .uri("/users/user-fullname-view/{id}", req.userId())
-                .retrieve()
-                .body(UserFullNameView.class);
+        UserFullNameView userFullNameView = fetchUserFullName(req.userId());
 
-        Department department = departmentRepository.findById(req.departmentId()).orElseThrow(DepartmentNotFound::new);
+        return persistUserDepartment(req, userFullNameView);
+    }
 
-        Position position = positionRepository.findById(req.positionId()).orElseThrow(PositionNotFoundException::new);
+    @Override
+    @Transactional
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    public void delete(DeleteUserDepartmentRequest req) {
+        UserDepartment userDepartment = userDepartmentRepository.findById_UserIdAndId_DepartmentId(
+                req.userId(), req.departmentId()).orElseThrow(UserDepartmentNotFoundException::new);
 
+        userDepartmentRepository.delete(userDepartment);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Department> departmentsPerUser(UUID userId) {
+        return userDepartmentRepository.findById_UserId(userId)
+                .stream()
+                .map(
+                        us -> departmentRepository
+                                .findById(us.getId()
+                                        .departmentId())
+                                .orElseThrow(DepartmentNotFound::new))
+                .toList();
+    }
+
+    @Override
+    @Transactional
+    public UserDepartmentResponse update(UserDepartmentRequest req) {
         UserDepartmentId userDepartmentId = new UserDepartmentId(req.userId(), req.departmentId(), req.positionId());
 
+        UserDepartment userDepartment = userDepartmentRepository.findById(userDepartmentId)
+                .orElseThrow(UserDepartmentNotFoundException::new);
+
+        if (!positionRepository.existsById(req.positionId())) {
+            throw new PositionNotFoundException();
+        }
+
+        userDepartmentRepository.delete(userDepartment);
+
+        UserFullNameView userFullNameView = fetchUserFullName(req.userId());
+
+        return persistUserDepartment(req, userFullNameView);
+    }
+
+    private UserDepartmentResponse persistUserDepartment(UserDepartmentRequest req, UserFullNameView userFullNameView) {
+        Department department = departmentRepository.findById(req.departmentId())
+                .orElseThrow(DepartmentNotFound::new);
+        Position position = positionRepository.findById(req.positionId())
+                .orElseThrow(PositionNotFoundException::new);
+
+        UserDepartmentId userDepartmentId = new UserDepartmentId(req.userId(), req.departmentId(), req.positionId());
         userDepartmentRepository.save(new UserDepartment(userDepartmentId));
 
         return new UserDepartmentResponse(userFullNameView.fullName(), department.getName(), position.getName());
     }
 
-    @Override
-    public void delete(DeleteUserDepartmentRequest req) {
-        // TODO Auto-generated method stub
-
+    private UserFullNameView fetchUserFullName(UUID userId) {
+        return restClient.get()
+                .uri("/users/user-fullname-view/{id}", userId)
+                .retrieve()
+                .body(UserFullNameView.class);
     }
-
-    @Override
-    public List<Department> departmentsPerUser(UUID userId) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public UserDepartmentResponse update(UserDepartmentRequest req) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
 }
