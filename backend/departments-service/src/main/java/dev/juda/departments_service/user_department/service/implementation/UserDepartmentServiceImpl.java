@@ -22,6 +22,7 @@ import dev.juda.departments_service.user_department.persistence.repository.UserD
 import dev.juda.departments_service.user_department.presentation.dto.request.DeleteUserDepartmentRequest;
 import dev.juda.departments_service.user_department.presentation.dto.request.UserDepartmentRequest;
 import dev.juda.departments_service.user_department.presentation.dto.response.UserDepartmentResponse;
+import dev.juda.departments_service.user_department.presentation.exception.UserDepartmentAlreadyExistsException;
 import dev.juda.departments_service.user_department.presentation.exception.UserDepartmentNotFoundException;
 import dev.juda.departments_service.user_department.service.interfaces.UserDepartmentService;
 
@@ -45,6 +46,10 @@ public class UserDepartmentServiceImpl implements UserDepartmentService {
     @Override
     @Transactional
     public UserDepartmentResponse create(UserDepartmentRequest req) {
+        if (userDepartmentRepository.existsById_UserIdAndId_DepartmentId(req.userId(), req.departmentId())) {
+            throw new UserDepartmentAlreadyExistsException();
+        }
+
         UserFullNameView userFullNameView = fetchUserFullName(req.userId());
 
         return persistUserDepartment(req, userFullNameView);

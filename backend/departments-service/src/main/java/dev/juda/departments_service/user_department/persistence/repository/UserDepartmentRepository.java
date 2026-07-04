@@ -13,4 +13,6 @@ public interface UserDepartmentRepository extends JpaRepository<UserDepartment, 
     Optional<UserDepartment> findById_UserIdAndId_DepartmentId(UUID userId, UUID departmentId);
 
     List<UserDepartment> findById_UserId(UUID userId);
+
+    boolean existsById_UserIdAndId_DepartmentId(UUID userId, UUID departmentId);
 }

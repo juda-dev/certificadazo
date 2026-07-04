@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import dev.juda.departments_service.shared.dto.ErrorResponse;
 import dev.juda.departments_service.user_department.presentation.exception.NonExistsUserException;
+import dev.juda.departments_service.user_department.presentation.exception.UserDepartmentAlreadyExistsException;
 import dev.juda.departments_service.user_department.presentation.exception.UserDepartmentNotFoundException;
 
 import static dev.juda.departments_service.user_department.util.enums.UserDepartmentErrorCatalog.*;
@@ -35,6 +36,17 @@ public class UserDepartmentExceptionHandler {
                 USER_DEPARTMENT_NOT_FOUND.getCode(),
                 HttpStatus.NOT_FOUND,
                 USER_DEPARTMENT_NOT_FOUND.getMessage(),
+                null,
+                LocalDateTime.now());
+    }
+
+    @ResponseStatus(code = HttpStatus.CONFLICT)
+    @ExceptionHandler(UserDepartmentAlreadyExistsException.class)
+    public ErrorResponse handleUserDepartmentAlreadyExistsException(UserDepartmentAlreadyExistsException ex) {
+        return new ErrorResponse(
+                USER_DEPARTMENT_ALREADY_EXISTS.getCode(),
+                HttpStatus.CONFLICT,
+                USER_DEPARTMENT_ALREADY_EXISTS.getMessage(),
                 null,
                 LocalDateTime.now());
     }
