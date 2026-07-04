@@ -21,6 +21,9 @@ import dev.juda.departments_service.department.service.interfaces.DepartmentServ
 import dev.juda.departments_service.position.presentation.dto.request.PositionRequest;
 import dev.juda.departments_service.position.presentation.dto.response.PositionResponse;
 import dev.juda.departments_service.position.service.interfaces.PositionService;
+import dev.juda.departments_service.user_department.presentation.dto.request.UserDepartmentRequest;
+import dev.juda.departments_service.user_department.presentation.dto.response.UserDepartmentResponse;
+import dev.juda.departments_service.user_department.service.interfaces.UserDepartmentService;
 import jakarta.validation.Valid;
 
 @RestController
@@ -29,10 +32,13 @@ public class DepartmentController {
 
     private final DepartmentService departmentService;
     private final PositionService positionService;
+    private final UserDepartmentService userDepartmentService;
 
-    public DepartmentController(DepartmentService departmentService, PositionService positionService) {
+    public DepartmentController(DepartmentService departmentService, PositionService positionService,
+            UserDepartmentService userDepartmentService) {
         this.departmentService = departmentService;
         this.positionService = positionService;
+        this.userDepartmentService = userDepartmentService;
     }
 
     @PostMapping
@@ -74,6 +80,11 @@ public class DepartmentController {
     @PutMapping("/positions/{id}")
     public PositionResponse update(@PathVariable UUID id, @Valid @RequestBody PositionRequest req) {
         return positionService.update(id, req);
+    }
+
+    @PostMapping("/user-departments")
+    public UserDepartmentResponse createUserDepartment(@RequestBody UserDepartmentRequest req) {
+        return userDepartmentService.create(req);
     }
 
 }
