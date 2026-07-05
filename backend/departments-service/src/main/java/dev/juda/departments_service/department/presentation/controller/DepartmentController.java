@@ -3,6 +3,7 @@ package dev.juda.departments_service.department.presentation.controller;
 import java.util.UUID;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dev.juda.departments_service.department.persistence.entity.Department;
 import dev.juda.departments_service.department.presentation.dto.request.DepartmentRequest;
+import dev.juda.departments_service.department.presentation.dto.response.DepartmentResponse;
 import dev.juda.departments_service.department.service.interfaces.DepartmentService;
 import jakarta.validation.Valid;
 
@@ -40,4 +42,8 @@ public class DepartmentController {
         departmentService.delete(id);
     }
 
+    @GetMapping("/{id}")
+    public DepartmentResponse read(@PathVariable UUID id) {
+        return departmentService.read(id);
+    }
 }

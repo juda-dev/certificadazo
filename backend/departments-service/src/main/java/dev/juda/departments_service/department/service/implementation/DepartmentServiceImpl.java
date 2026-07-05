@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import dev.juda.departments_service.department.persistence.entity.Department;
 import dev.juda.departments_service.department.persistence.repository.DepartmentRepository;
 import dev.juda.departments_service.department.presentation.dto.request.DepartmentRequest;
+import dev.juda.departments_service.department.presentation.dto.response.DepartmentResponse;
 import dev.juda.departments_service.department.presentation.exception.DepartmentAlreadyExistsException;
 import dev.juda.departments_service.department.presentation.exception.DepartmentNotFoundException;
 import dev.juda.departments_service.department.service.interfaces.DepartmentService;
@@ -55,6 +56,14 @@ public class DepartmentServiceImpl implements DepartmentService {
         department.setName(req.name());
 
         return repository.save(department);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public DepartmentResponse read(UUID id) {
+        return repository.findById(id)
+                .map(DepartmentResponse::from)
+                .orElseThrow(DepartmentNotFoundException::new);
     }
 
 }

@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import dev.juda.departments_service.department.persistence.entity.Department;
 import dev.juda.departments_service.department.presentation.dto.request.DepartmentRequest;
+import dev.juda.departments_service.department.presentation.dto.response.DepartmentResponse;
 
 public interface DepartmentService {
     Department create(DepartmentRequest req);
@@ -11,4 +12,6 @@ public interface DepartmentService {
     Department update(UUID id, DepartmentRequest req);
 
     void delete(UUID id);
+
+    DepartmentResponse read(UUID id);
 }
