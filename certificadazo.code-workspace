@@ -23,6 +23,10 @@
 		{
 			"name": "Departments 🧑‍🧒‍🧒",
 			"path": "backend/departments-service"
+		},
+		{
+			"name": "Templates 📑",
+			"path": "backend/templates-service"
 		}
 	],
 	"settings": {
