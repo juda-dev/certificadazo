@@ -1,6 +1,7 @@
 volumes:
   mysql-users:
   mysql-departments:
+  mysql-templates:
   kafka-data:
   keycloak-data:
 
@@ -38,6 +39,25 @@ services:
       - "3301:3306"
     volumes:
       - mysql-departments:/var/lib/mysql
+    networks:
+      - certificadazo-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-judadev}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  mysql-templates:
+    image: mysql:latest
+    container_name: mysql-templates
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-judadev}
+    ports:
+      - "3302:3306"
+    volumes:
+      - mysql-templates:/var/lib/mysql
     networks:
       - certificadazo-network
     healthcheck:
