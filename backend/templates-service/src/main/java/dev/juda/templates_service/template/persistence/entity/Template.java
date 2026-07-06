@@ -1,6 +1,7 @@
 package dev.juda.templates_service.template.persistence.entity;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.hibernate.annotations.JdbcTypeCode;
@@ -30,21 +31,28 @@ public class Template {
     @Column(name = "department_id", nullable = false)
     private UUID departmentId;
 
-    @Column(name = "image_src", nullable = false, unique = true)
-    private String imageSrc;
+    @Column(name = "preview_src", nullable = false, unique = true)
+    private String previewSrc;
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "json")
     private List<String> fields;
 
-    public Template(){}
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "images_src", columnDefinition = "json")
+    private Map<String, Object> imagesSrc;
 
-    public Template(String name, String desing, UUID departmentId, String imageSrc, List<String> fields) {
+    public Template() {
+    }
+
+    public Template(String name, String desing, UUID departmentId, String previewSrc, List<String> fields,
+            Map<String, Object> imagesSrc) {
         this.name = name;
         this.desing = desing;
         this.departmentId = departmentId;
-        this.imageSrc = imageSrc;
+        this.previewSrc = previewSrc;
         this.fields = fields;
+        this.imagesSrc = imagesSrc;
     }
 
     public UUID getId() {
@@ -79,20 +87,28 @@ public class Template {
         this.departmentId = departmentId;
     }
 
-    public String getImageSrc() {
-        return imageSrc;
-    }
-
-    public void setImageSrc(String imageSrc) {
-        this.imageSrc = imageSrc;
-    }
-
     public List<String> getFields() {
         return fields;
     }
 
     public void setFields(List<String> fields) {
         this.fields = fields;
+    }
+
+    public String getPreviewSrc() {
+        return previewSrc;
+    }
+
+    public void setPreviewSrc(String previewSrc) {
+        this.previewSrc = previewSrc;
+    }
+
+    public Map<String, Object> getImagesSrc() {
+        return imagesSrc;
+    }
+
+    public void setImagesSrc(Map<String, Object> imagesSrc) {
+        this.imagesSrc = imagesSrc;
     }
 
 }
