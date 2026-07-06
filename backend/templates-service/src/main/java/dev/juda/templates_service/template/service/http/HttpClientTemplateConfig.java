@@ -10,7 +10,7 @@ import org.springframework.web.client.RestClient;
 import dev.juda.templates_service.template.presentation.exception.DepartmentNotFoundException;
 
 @Configuration
-public class HttpClientConfig {
+public class HttpClientTemplateConfig {
 
     @Bean
     @Primary
@@ -25,7 +25,7 @@ public class HttpClientConfig {
     }
 
     @Bean
-    RestClient usersRestClient(@LoadBalanced RestClient.Builder builder) {
+    RestClient departmentsRestClient(@LoadBalanced RestClient.Builder builder) {
         return builder
                 .baseUrl("http://departments-service/departments/")
                 .defaultStatusHandler(HttpStatusCode::is4xxClientError, (request, response) -> {
