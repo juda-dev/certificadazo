@@ -27,7 +27,7 @@ public class HttpClientConfig {
     @Bean
     RestClient usersRestClient(@LoadBalanced RestClient.Builder builder) {
         return builder
-                .baseUrl("http://departments-service")
+                .baseUrl("http://departments-service/departments/")
                 .defaultStatusHandler(HttpStatusCode::is4xxClientError, (request, response) -> {
                     throw new DepartmentNotFoundException();
                 })

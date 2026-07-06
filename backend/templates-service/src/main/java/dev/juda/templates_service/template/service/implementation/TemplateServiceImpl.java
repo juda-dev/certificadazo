@@ -84,7 +84,7 @@ public class TemplateServiceImpl implements TemplateService {
 
     private DepartmentResponse fetchDepartmentName(UUID departmentId) {
         return restClient.get()
-                .uri("{id}}", departmentId)
+                .uri("{id}", departmentId)
                 .retrieve()
                 .body(DepartmentResponse.class);
     }

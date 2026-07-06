@@ -4,12 +4,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
 public record TemplateRequest(
-        String name,
-        String desing,
-        UUID departmentId,
-        String previewSrc,
-        List<String> fields,
-        Map<String, Object> imagesSrc) {
+                @NotBlank String name,
+                @NotBlank String desing,
+                @NotNull UUID departmentId,
+                @NotBlank String previewSrc,
+                @NotEmpty List<@Valid String> fields,
+                @NotEmpty Map<String, @Valid Object> imagesSrc) {
 
 }
