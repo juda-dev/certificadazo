@@ -59,9 +59,19 @@ public class TemplateServiceImpl implements TemplateService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<ReadAllTemplateResponse> readAll(Pageable pageable) {
-        // TODO Auto-generated method stub
-        return null;
+        return templateRepository
+                .findAll(pageable).map(t -> {
+                    String departmentName = fetchDepartmentName(t.getDepartmentId()).name();
+
+                    return new ReadAllTemplateResponse(
+                            t.getId(),
+                            t.getName(),
+                            departmentName,
+                            t.getPreviewSrc(),
+                            t.getFields());
+                });
     }
 
     @Override
