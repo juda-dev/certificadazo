@@ -40,6 +40,13 @@ spring:
               filters:
                 - TokenRelay=
                 - StripPrefix=1
+            - id: templates-service
+              uri: lb://templates-service
+              predicates:
+                - Path=/api/templates/**
+              filters:
+                - TokenRelay=
+                - StripPrefix=1
 
 eureka:
     client:
