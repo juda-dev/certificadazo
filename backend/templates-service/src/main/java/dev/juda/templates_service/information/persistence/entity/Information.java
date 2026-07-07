@@ -25,6 +25,10 @@ public class Information {
     public Information() {
     }
 
+    public Information(InformationId id) {
+        this.id = id;
+    }
+
     public Information(InformationId id, Map<String, Object> data) {
         this.id = id;
         this.data = data;

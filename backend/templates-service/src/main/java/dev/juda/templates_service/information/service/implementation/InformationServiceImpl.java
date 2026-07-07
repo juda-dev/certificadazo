@@ -101,9 +101,9 @@ public class InformationServiceImpl implements InformationService {
             throw new TemplateNotFoundException();
         }
 
-        Information information = (informationId == null)
+        Information information = (informationId != null)
                 ? informationRepository.findById(informationId).orElseThrow(InformationNotFoundException::new)
-                : new Information();
+                : new Information(new InformationId(req.templateId(), req.userId()));
 
         information.setData(req.data());
 
