@@ -1,7 +1,7 @@
 package dev.juda.templates_service.template.persistence.entity;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import org.hibernate.annotations.JdbcTypeCode;
@@ -36,7 +36,7 @@ public class Template {
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "json")
-    private List<String> fields;
+    private Set<String> fields;
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "images_src", columnDefinition = "json")
@@ -45,7 +45,7 @@ public class Template {
     public Template() {
     }
 
-    public Template(String name, String desing, UUID departmentId, String previewSrc, List<String> fields,
+    public Template(String name, String desing, UUID departmentId, String previewSrc, Set<String> fields,
             Map<String, Object> imagesSrc) {
         this.name = name;
         this.desing = desing;
@@ -87,11 +87,11 @@ public class Template {
         this.departmentId = departmentId;
     }
 
-    public List<String> getFields() {
+    public Set<String> getFields() {
         return fields;
     }
 
-    public void setFields(List<String> fields) {
+    public void setFields(Set<String> fields) {
         this.fields = fields;
     }
 

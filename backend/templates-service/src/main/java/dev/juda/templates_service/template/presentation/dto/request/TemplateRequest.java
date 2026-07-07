@@ -1,7 +1,7 @@
 package dev.juda.templates_service.template.presentation.dto.request;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import jakarta.validation.Valid;
@@ -14,7 +14,7 @@ public record TemplateRequest(
                 @NotBlank String desing,
                 @NotNull UUID departmentId,
                 @NotBlank String previewSrc,
-                @NotEmpty List<@Valid String> fields,
+                @NotEmpty Set<@Valid String> fields,
                 @NotEmpty Map<String, @Valid Object> imagesSrc) {
 
 }

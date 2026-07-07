@@ -1,6 +1,6 @@
 package dev.juda.templates_service.template.presentation.dto.response;
 
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import dev.juda.templates_service.template.persistence.entity.Template;
@@ -10,7 +10,7 @@ public record ReadAllTemplateResponse(
                 String name,
                 String departmentName,
                 String previewSrc,
-                List<String> fields) {
+                Set<String> fields) {
 
         public static ReadAllTemplateResponse from(Template t, String departmentName) {
                 return new ReadAllTemplateResponse(
