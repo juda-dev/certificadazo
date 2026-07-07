@@ -12,7 +12,7 @@ public interface InformationService {
 
     ReadInformationResponse read(ReadInformationRequest req);
 
-    InformationResponse update(InformationRequest req);
+    InformationResponse update(InformationId id, InformationRequest req);
 
     void delete(InformationId id);
 }
