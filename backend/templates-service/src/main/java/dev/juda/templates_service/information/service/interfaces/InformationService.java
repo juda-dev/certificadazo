@@ -1,7 +1,6 @@
 package dev.juda.templates_service.information.service.interfaces;
 
-import java.util.UUID;
-
+import dev.juda.templates_service.information.persistence.embeddable.InformationId;
 import dev.juda.templates_service.information.presentation.dto.request.InformationRequest;
 import dev.juda.templates_service.information.presentation.dto.request.ReadInformationRequest;
 import dev.juda.templates_service.information.presentation.dto.response.InformationResponse;
@@ -15,5 +14,5 @@ public interface InformationService {
 
     InformationResponse update(InformationRequest req);
 
-    void delete(UUID id);
+    void delete(InformationId id);
 }
