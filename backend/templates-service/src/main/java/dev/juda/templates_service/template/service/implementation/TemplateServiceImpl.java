@@ -2,6 +2,7 @@ package dev.juda.templates_service.template.service.implementation;
 
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,8 @@ public class TemplateServiceImpl implements TemplateService {
     private final TemplateRepository templateRepository;
     private final RestClient restClient;
 
-    public TemplateServiceImpl(TemplateRepository templateRepository, RestClient restClient) {
+    public TemplateServiceImpl(TemplateRepository templateRepository,
+            @Qualifier("departmentsRestClient") RestClient restClient) {
         this.templateRepository = templateRepository;
         this.restClient = restClient;
     }
