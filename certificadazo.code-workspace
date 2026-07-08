@@ -27,6 +27,10 @@
 		{
 			"name": "Templates 📑",
 			"path": "backend/templates-service"
+		},
+		{
+			"name": "AI 🤖🇨🇴",
+			"path": "backend/ai-service"
 		}
 	],
 	"settings": {
