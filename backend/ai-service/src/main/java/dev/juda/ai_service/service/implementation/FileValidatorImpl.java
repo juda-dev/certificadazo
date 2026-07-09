@@ -20,7 +20,7 @@ public class FileValidatorImpl implements FileValidator {
             "application/pdf");
 
     @Override
-    public void validate(MultipartFile file) {
+    public String validate(MultipartFile file) {
 
         Tika tika = new Tika();
 
@@ -30,6 +30,8 @@ public class FileValidatorImpl implements FileValidator {
             if (!ALLOWED_TYPES.contains(detectedType)) {
                 throw new InvalidFileTypeException();
             }
+
+            return detectedType;
         } catch (IOException e) {
             throw new InvalidFileTypeException();
         }
