@@ -5,6 +5,11 @@ spring:
   application:
     name: ai-service
 
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+
   ai:
     deepseek:
       api-key: ${DEEPSEEK_API_KEY}
