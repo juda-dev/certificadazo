@@ -27,7 +27,7 @@ public class AiCommandConsumer {
     }
 
     @Bean
-    public Function<Message<Command<Object>>, Message<Reply<Object>>> handleCommands() {
+    Function<Message<Command<Object>>, Message<Reply<Object>>> handleCommands() {
         return msg -> {
             String correlationId = msg.getHeaders().get("correlationId").toString();
             if (correlationId == null || correlationId.isBlank()) {
