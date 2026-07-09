@@ -12,7 +12,7 @@ spring:
 
   cloud:
     function:
-      definition: 
+      definition: handleReplies
 
     stream:
       bindings:
