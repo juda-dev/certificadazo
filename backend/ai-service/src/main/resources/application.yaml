@@ -28,3 +28,7 @@ qwen:
   model: ${QWEN_MODEL:qwen3.7-plus}
   temperature: 0.0
   max-tokens: 20480
+
+app:
+  storage:
+    location: ./uploads
