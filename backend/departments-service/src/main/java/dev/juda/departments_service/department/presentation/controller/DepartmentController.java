@@ -46,4 +46,9 @@ public class DepartmentController {
     public DepartmentResponse read(@PathVariable UUID id) {
         return departmentService.read(id);
     }
+
+    @GetMapping("/exists/{id}")
+    public Boolean existsById(@PathVariable UUID id) {
+        return departmentService.existsById(id);
+    }
 }

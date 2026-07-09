@@ -66,4 +66,9 @@ public class DepartmentServiceImpl implements DepartmentService {
                 .orElseThrow(DepartmentNotFoundException::new);
     }
 
+    @Override
+    public Boolean existsById(UUID id) {
+        return repository.existsById(id);
+    }
+
 }

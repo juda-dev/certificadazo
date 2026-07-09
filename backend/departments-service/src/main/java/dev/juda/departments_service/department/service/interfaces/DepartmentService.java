@@ -14,4 +14,6 @@ public interface DepartmentService {
     void delete(UUID id);
 
     DepartmentResponse read(UUID id);
+
+    Boolean existsById(UUID id);
 }
