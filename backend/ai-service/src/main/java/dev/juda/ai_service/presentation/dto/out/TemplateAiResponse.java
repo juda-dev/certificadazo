@@ -1,10 +1,10 @@
-package dev.juda.ai_service.presentation.dto.in;
+package dev.juda.ai_service.presentation.dto.out;
 
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-public record TemplateRequest(
+public record TemplateAiResponse(
         String name,
         String desing,
         UUID departmentId,
