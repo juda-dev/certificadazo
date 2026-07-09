@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.juda.templates_service.template.presentation.dto.request.TemplateRequest;
+import dev.juda.templates_service.template.messaging.dto.in.TemplateAiResponse;
 import dev.juda.templates_service.template.presentation.dto.response.ReadAllTemplateResponse;
 import dev.juda.templates_service.template.presentation.dto.response.ReadTemplateResponse;
 import dev.juda.templates_service.template.presentation.dto.response.TemplateResponse;
@@ -28,11 +28,6 @@ public class TemplateController {
 
     public TemplateController(TemplateService templateService) {
         this.templateService = templateService;
-    }
-
-    @PostMapping
-    public TemplateResponse create(@Valid @RequestBody TemplateRequest request) {
-        return templateService.create(request);
     }
 
     @DeleteMapping("/{id}")
@@ -50,8 +45,4 @@ public class TemplateController {
         return templateService.readAll(pageable);
     }
 
-    @PutMapping("/{id}")
-    public TemplateResponse update(@PathVariable UUID id, @Valid @RequestBody TemplateRequest request) {
-        return templateService.update(id, request);
-    }
 }

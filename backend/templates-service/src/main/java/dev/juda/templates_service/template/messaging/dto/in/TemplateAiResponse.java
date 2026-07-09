@@ -1,4 +1,4 @@
-package dev.juda.templates_service.template.presentation.dto.request;
+package dev.juda.templates_service.template.messaging.dto.in;
 
 import java.util.Map;
 import java.util.Set;
@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
-public record TemplateRequest(
+public record TemplateAiResponse(
                 @NotBlank String name,
                 @NotBlank String desing,
                 @NotNull UUID departmentId,

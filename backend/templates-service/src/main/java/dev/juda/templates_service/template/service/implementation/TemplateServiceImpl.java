@@ -11,10 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.client.RestClient;
 
+import dev.juda.templates_service.template.messaging.dto.in.TemplateAiResponse;
 import dev.juda.templates_service.template.persistence.entity.Template;
 import dev.juda.templates_service.template.persistence.repository.TemplateRepository;
 import dev.juda.templates_service.template.presentation.dto.in.DepartmentResponse;
-import dev.juda.templates_service.template.presentation.dto.request.TemplateRequest;
 import dev.juda.templates_service.template.presentation.dto.response.ReadAllTemplateResponse;
 import dev.juda.templates_service.template.presentation.dto.response.ReadTemplateResponse;
 import dev.juda.templates_service.template.presentation.dto.response.TemplateResponse;
@@ -36,7 +36,7 @@ public class TemplateServiceImpl implements TemplateService {
     @Override
     @Transactional
     @ResponseStatus(code = HttpStatus.CREATED)
-    public TemplateResponse create(TemplateRequest req) {
+    public TemplateResponse create(TemplateAiResponse req) {
 
         String departmentName = fetchDepartmentName(req.departmentId()).name();
 
@@ -78,7 +78,7 @@ public class TemplateServiceImpl implements TemplateService {
 
     @Override
     @Transactional
-    public TemplateResponse update(UUID id, TemplateRequest req) {
+    public TemplateResponse update(UUID id, TemplateAiResponse req) {
         String departmentName = fetchDepartmentName(req.departmentId()).name();
 
         return persistTemplate(id, req, departmentName);
@@ -91,7 +91,7 @@ public class TemplateServiceImpl implements TemplateService {
                 .body(DepartmentResponse.class);
     }
 
-    private TemplateResponse persistTemplate(UUID templateId, TemplateRequest req, String departmentName) {
+    private TemplateResponse persistTemplate(UUID templateId, TemplateAiResponse req, String departmentName) {
         Template template = (templateId != null) ? templateRepository.findById(templateId)
                 .orElseThrow(TemplateNotFoundException::new) : new Template();
 
