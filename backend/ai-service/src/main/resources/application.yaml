@@ -10,6 +10,24 @@ spring:
       max-file-size: 20MB
       max-request-size: 20MB
 
+  cloud:
+    function:
+      definition: 
+
+    stream:
+      bindings:
+        commands-out-0:
+          destination: templates-events
+          content-type: application/json
+        handleReplies-in-0:
+          destination: templates-replies
+          content-type: application/json
+          group: ai-service
+
+      kafka:
+        binder:
+          brokers: ${KAFKA_URI:localhost:9092}
+
   ai:
     deepseek:
       api-key: ${DEEPSEEK_API_KEY}
