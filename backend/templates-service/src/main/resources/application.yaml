@@ -15,17 +15,17 @@ spring:
 
   cloud:
     function:
-      definition: handleReplies
+      definition: handleCommands
 
     stream:
       bindings:
-        commands-out-0:
+        commands-in-0:
           destination: templates-events
           content-type: application/json
-        handleReplies-in-0:
+          group: templates-service
+        handleReplies-out-0:
           destination: templates-replies
           content-type: application/json
-          group: ai-service
 
       kafka:
         binder:
