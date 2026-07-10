@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.client.RestClient;
 
-import dev.juda.templates_service.template.messaging.dto.in.TemplateAiResponse;
+import dev.juda.templates_service.shared.messaging.dto.in.TemplateAiResponse;
 import dev.juda.templates_service.template.persistence.entity.Template;
 import dev.juda.templates_service.template.persistence.repository.TemplateRepository;
 import dev.juda.templates_service.template.presentation.dto.in.DepartmentResponse;

@@ -1,4 +1,4 @@
-package dev.juda.templates_service.template.messaging.dto.in;
+package dev.juda.templates_service.shared.messaging.dto.in;
 
 import java.util.Map;
 import java.util.Set;

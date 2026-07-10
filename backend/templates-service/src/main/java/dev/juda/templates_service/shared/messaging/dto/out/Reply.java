@@ -1,4 +1,4 @@
-package dev.juda.templates_service.template.messaging.dto.out;
+package dev.juda.templates_service.shared.messaging.dto.out;
 
 import dev.juda.templates_service.template.util.enums.ReplyStatus;
 

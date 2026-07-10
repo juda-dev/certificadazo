@@ -5,7 +5,7 @@ import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import dev.juda.templates_service.template.messaging.dto.in.TemplateAiResponse;
+import dev.juda.templates_service.shared.messaging.dto.in.TemplateAiResponse;
 import dev.juda.templates_service.template.presentation.dto.response.ReadAllTemplateResponse;
 import dev.juda.templates_service.template.presentation.dto.response.ReadTemplateResponse;
 import dev.juda.templates_service.template.presentation.dto.response.TemplateResponse;

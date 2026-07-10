@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.juda.templates_service.template.messaging.dto.in.TemplateAiResponse;
+import dev.juda.templates_service.shared.messaging.dto.in.TemplateAiResponse;
 import dev.juda.templates_service.template.presentation.dto.response.ReadAllTemplateResponse;
 import dev.juda.templates_service.template.presentation.dto.response.ReadTemplateResponse;
 import dev.juda.templates_service.template.presentation.dto.response.TemplateResponse;

@@ -1,4 +1,4 @@
-package dev.juda.templates_service.template.messaging.handler;
+package dev.juda.templates_service.shared.messaging.handler;
 
 import java.util.function.Function;
 
@@ -7,9 +7,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 
-import dev.juda.templates_service.template.messaging.dto.in.Command;
-import dev.juda.templates_service.template.messaging.dto.in.TemplateAiResponse;
-import dev.juda.templates_service.template.messaging.dto.out.Reply;
+import dev.juda.templates_service.shared.messaging.dto.in.Command;
+import dev.juda.templates_service.shared.messaging.dto.in.TemplateAiResponse;
+import dev.juda.templates_service.shared.messaging.dto.out.Reply;
 import dev.juda.templates_service.template.service.interfaces.TemplateService;
 import dev.juda.templates_service.template.util.enums.CommandType;
 import dev.juda.templates_service.template.util.enums.ReplyStatus;
