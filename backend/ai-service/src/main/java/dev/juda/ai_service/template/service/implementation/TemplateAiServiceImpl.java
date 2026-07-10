@@ -30,13 +30,13 @@ import dev.juda.ai_service.template.presentation.exception.CommandNotSentExcepti
 import dev.juda.ai_service.template.presentation.exception.DepartmentNotFoundException;
 import dev.juda.ai_service.template.presentation.exception.InvalidFileTypeException;
 import dev.juda.ai_service.template.presentation.exception.TimeoutCommandException;
-import dev.juda.ai_service.template.service.interfaces.AiService;
+import dev.juda.ai_service.template.service.interfaces.TemplateAiService;
 import dev.juda.ai_service.template.service.interfaces.FileStorageService;
 import dev.juda.ai_service.template.service.interfaces.PdfConverter;
 import tools.jackson.databind.ObjectMapper;
 
 @Service
-public class AiServiceImpl implements AiService {
+public class TemplateAiServiceImpl implements TemplateAiService {
     private final RestClient restClient;
     private final ChatClient qwenChatClient;
     private final FileStorageService fileStorageService;
@@ -46,7 +46,7 @@ public class AiServiceImpl implements AiService {
     private final ReplyInbox replyInbox;
     private final ObjectMapper mapper;
 
-    public AiServiceImpl(@Qualifier("departments") RestClient restClient,
+    public TemplateAiServiceImpl(@Qualifier("departments") RestClient restClient,
             @Qualifier("qwenChatClient") ChatClient qwenChatClient,
             FileStorageService fileStorageService, FileValidator fileValidator, PdfConverter pdfConverter,
             ObjectMapper mapper, ReplyInbox replyInbox, StreamBridge streamBridge) {

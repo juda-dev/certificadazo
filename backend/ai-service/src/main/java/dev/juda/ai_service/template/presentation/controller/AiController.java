@@ -9,15 +9,15 @@ import org.springframework.web.multipart.MultipartFile;
 
 import dev.juda.ai_service.template.presentation.dto.in.TemplateResponse;
 import dev.juda.ai_service.template.presentation.dto.request.TemplateRequest;
-import dev.juda.ai_service.template.service.interfaces.AiService;
+import dev.juda.ai_service.template.service.interfaces.TemplateAiService;
 
 @RestController
 @RequestMapping("/ai")
 public class AiController {
 
-    private final AiService aiService;
+    private final TemplateAiService aiService;
 
-    public AiController(AiService aiService) {
+    public AiController(TemplateAiService aiService) {
         this.aiService = aiService;
     }
 
