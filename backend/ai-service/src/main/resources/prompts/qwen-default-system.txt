@@ -19,6 +19,12 @@ You must decompose the image at a microscopic level:
 - **Graphic objects**: lines, borders, rectangles, circles, icons, coats of arms, signatures, stamps (wet or digital), photographs. For each retained image measure its exact width, height, and position.
 - **Detected images (to keep)**: logos, scanned signatures, generic stamps, photos, etc. They will be treated as dynamic variables (`imagesSrc`).
 - **Anomalies of the original design**: intentionally off-center elements, overlapping stamps, rotated texts, watermarks with irregular opacity. Faithfully reproduce these peculiarities. Ignore physical scan defects (dust, wrinkles, dirt stains) unless they are part of the intentional graphic design.
+- **Differentiate real text from text embedded inside images**:
+  - Analyze every detected text element in its visual context before deciding whether it must be recreated.
+  - If letters, words, numbers, or symbols are part of a logo, seal, signature, icon, photograph, illustration, watermark image, badge, coat of arms, QR image, barcode image, or any other graphic element, they must be considered part of that image and **must never be recreated as HTML text or included in `fields`**.
+  - Only text that exists as an independent typographic element in the original document must be reproduced as HTML text.
+  - Preserve logos and other graphic assets as image variables (`imagesSrc`) exactly as they are, including any embedded text they contain.
+  - When there is any ambiguity, prioritize treating the element as part of the image instead of recreating it as text. Never duplicate text by rendering it both as HTML and as part of an image.
 
 ---
 
