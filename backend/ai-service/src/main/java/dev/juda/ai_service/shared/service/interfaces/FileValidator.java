@@ -5,5 +5,5 @@ import org.springframework.web.multipart.MultipartFile;
 import dev.juda.ai_service.shared.util.enums.SupportedFileType;
 
 public interface FileValidator {
-    String validateIsImageOrPdf(MultipartFile file, SupportedFileType expectedType);
+    String validate(MultipartFile file, SupportedFileType expectedType);
 }

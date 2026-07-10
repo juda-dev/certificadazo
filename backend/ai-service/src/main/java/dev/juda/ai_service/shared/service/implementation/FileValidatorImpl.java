@@ -14,7 +14,7 @@ import dev.juda.ai_service.template.presentation.exception.InvalidFileTypeExcept
 public class FileValidatorImpl implements FileValidator {
 
     @Override
-    public String validateIsImageOrPdf(MultipartFile file, SupportedFileType expectedType) {
+    public String validate(MultipartFile file, SupportedFileType expectedType) {
 
         Tika tika = new Tika();
 
