@@ -38,7 +38,7 @@ public class AiCommandConsumer {
             Command<?> cmd = msg.getPayload();
 
             Reply<Object> reply = switch (cmd.type()) {
-                case CommandType.CREATE -> {
+                case CommandType.CREATE_TEMPLATE -> {
                     if (cmd.body() == null) {
                         yield new Reply<>(ReplyStatus.ERROR, "Create Empty body", null);
                     }

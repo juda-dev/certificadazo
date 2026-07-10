@@ -103,7 +103,7 @@ public class TemplateAiServiceImpl implements TemplateAiService {
                 .call()
                 .entity(TemplateAiResponse.class);
 
-        var cmd = new Command<>(CommandType.CREATE, null, templateAiResponse);
+        var cmd = new Command<>(CommandType.CREATE_TEMPLATE, null, templateAiResponse);
 
         Reply<?> reply = getReply(cmd, "CREATE");
 
