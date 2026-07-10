@@ -1,5 +1,6 @@
 package dev.juda.templates_service.template.presentation.controller;
 
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -43,6 +44,16 @@ public class TemplateController {
     @GetMapping
     public Page<ReadAllTemplateResponse> readAll(Pageable pageable) {
         return templateService.readAll(pageable);
+    }
+
+    @GetMapping("/exists/{id}")
+    public Boolean existsById(@PathVariable UUID id) {
+        return templateService.existsById(id);
+    }
+
+    @GetMapping("/fields/{id}")
+    public Set<String> findFieldsById(@PathVariable UUID id) {
+        return templateService.readFieldsById(id);
     }
 
 }

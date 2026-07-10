@@ -1,5 +1,6 @@
 package dev.juda.templates_service.template.service.interfaces;
 
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -21,4 +22,8 @@ public interface TemplateService {
     TemplateResponse update(UUID id, TemplateAiResponse req);
 
     void delete(UUID id);
+
+    Set<String> readFieldsById(UUID id);
+
+    Boolean existsById(UUID id);
 }

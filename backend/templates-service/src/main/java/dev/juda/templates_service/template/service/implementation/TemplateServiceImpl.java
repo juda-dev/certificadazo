@@ -1,5 +1,7 @@
 package dev.juda.templates_service.template.service.implementation;
 
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -106,4 +108,17 @@ public class TemplateServiceImpl implements TemplateService {
 
         return TemplateResponse.from(saved, departmentName);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Set<String> readFieldsById(UUID id) {
+        return templateRepository.findFieldsById(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Boolean existsById(UUID id) {
+        return templateRepository.existsById(id);
+    }
+
 }
