@@ -1,4 +1,4 @@
-package dev.juda.ai_service.template.configuration;
+package dev.juda.ai_service.information.configuration;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
