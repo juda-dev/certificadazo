@@ -1,4 +1,4 @@
-package dev.juda.ai_service.template.service.http;
+package dev.juda.ai_service.information.service.http;
 
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
@@ -6,12 +6,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestClient;
 
 @Configuration
-public class HttpClientTemplateConfig {
+public class HttpClientInformationConfig {
 
-    @Bean("departments")
-    RestClient departmentsRestClient(@LoadBalanced RestClient.Builder builder) {
+    @Bean("templates")
+    RestClient templatesRestClient(@LoadBalanced RestClient.Builder builder) {
         return builder
-                .baseUrl("http://departments-service/departments/")
+                .baseUrl("http://templates-service/templates/")
                 .build();
     }
 }

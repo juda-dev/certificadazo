@@ -46,7 +46,8 @@ public class AiServiceImpl implements AiService {
     private final ReplyInbox replyInbox;
     private final ObjectMapper mapper;
 
-    public AiServiceImpl(RestClient restClient, @Qualifier("qwenChatClient") ChatClient qwenChatClient,
+    public AiServiceImpl(@Qualifier("departments") RestClient restClient,
+            @Qualifier("qwenChatClient") ChatClient qwenChatClient,
             FileStorageService fileStorageService, FileValidator fileValidator, PdfConverter pdfConverter,
             ObjectMapper mapper, ReplyInbox replyInbox, StreamBridge streamBridge) {
         this.restClient = restClient;
