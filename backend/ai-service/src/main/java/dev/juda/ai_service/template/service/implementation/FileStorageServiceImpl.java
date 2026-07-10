@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import dev.juda.ai_service.shared.service.interfaces.FileValidator;
+import dev.juda.ai_service.shared.util.enums.SupportedFileType;
 import dev.juda.ai_service.template.configuration.storage.StorageProperties;
 import dev.juda.ai_service.template.presentation.exception.DirectoryNotCreatedException;
 import dev.juda.ai_service.template.presentation.exception.InvalidFileTypeException;
@@ -44,7 +45,7 @@ public class FileStorageServiceImpl implements FileStorageService {
 
     @Override
     public String savePreview(MultipartFile file) {
-        String fileType = fileValidator.validateIsImageOrPdf(file);
+        String fileType = fileValidator.validate(file, SupportedFileType.IMAGE_PDF);
 
         byte[] imageBytes;
 

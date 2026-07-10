@@ -22,6 +22,7 @@ import dev.juda.ai_service.shared.messaging.dto.in.Reply;
 import dev.juda.ai_service.shared.messaging.dto.out.Command;
 import dev.juda.ai_service.shared.service.interfaces.FileValidator;
 import dev.juda.ai_service.shared.util.enums.CommandType;
+import dev.juda.ai_service.shared.util.enums.SupportedFileType;
 import dev.juda.ai_service.template.presentation.dto.in.TemplateResponse;
 import dev.juda.ai_service.template.presentation.dto.out.TemplateAiResponse;
 import dev.juda.ai_service.template.presentation.dto.request.TemplateRequest;
@@ -70,7 +71,7 @@ public class AiServiceImpl implements AiService {
 
         String previewSrc = fileStorageService.savePreview(file);
 
-        String fileType = fileValidator.validateIsImageOrPdf(file);
+        String fileType = fileValidator.validate(file, SupportedFileType.IMAGE_PDF);
 
         byte[] imageBytes;
 
