@@ -47,6 +47,13 @@ spring:
               filters:
                 - TokenRelay=
                 - StripPrefix=1
+            - id: ai-service
+              uri: lb://ai-service
+              predicates:
+                - Path=/api/ai/**
+              filters:
+                - TokenRelay=
+                - StripPrefix=1
 
 eureka:
     client:
