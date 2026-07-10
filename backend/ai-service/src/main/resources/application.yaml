@@ -23,7 +23,7 @@ spring:
           destination: templates-events
           content-type: application/json
         handleReplies-in-0:
-          destination: templates-replies
+          destination: ai-replies
           content-type: application/json
           group: ai-service
 

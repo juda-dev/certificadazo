@@ -24,7 +24,7 @@ spring:
           content-type: application/json
           group: templates-service
         handleCommands-out-0:
-          destination: templates-replies
+          destination: ai-replies
           content-type: application/json
 
       kafka:
