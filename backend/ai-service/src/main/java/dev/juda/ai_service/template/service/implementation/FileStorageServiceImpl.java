@@ -44,7 +44,7 @@ public class FileStorageServiceImpl implements FileStorageService {
 
     @Override
     public String savePreview(MultipartFile file) {
-        String fileType = fileValidator.validate(file);
+        String fileType = fileValidator.validateIsImageOrPdf(file);
 
         byte[] imageBytes;
 

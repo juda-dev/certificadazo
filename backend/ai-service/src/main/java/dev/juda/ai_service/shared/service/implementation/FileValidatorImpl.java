@@ -13,21 +13,21 @@ import dev.juda.ai_service.template.presentation.exception.InvalidFileTypeExcept
 @Service
 public class FileValidatorImpl implements FileValidator {
 
-    private static final Set<String> ALLOWED_TYPES = Set.of(
+    private static final Set<String> ALLOWED_IMAGE_PDF_MIME_TYPES = Set.of(
             "image/jpeg",
             "image/png",
             "image/webp",
             "application/pdf");
 
     @Override
-    public String validate(MultipartFile file) {
+    public String validateIsImageOrPdf(MultipartFile file) {
 
         Tika tika = new Tika();
 
         try {
             String detectedType = tika.detect(file.getInputStream());
 
-            if (!ALLOWED_TYPES.contains(detectedType)) {
+            if (!ALLOWED_IMAGE_PDF_MIME_TYPES.contains(detectedType)) {
                 throw new InvalidFileTypeException();
             }
 

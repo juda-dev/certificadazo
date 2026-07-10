@@ -70,7 +70,7 @@ public class AiServiceImpl implements AiService {
 
         String previewSrc = fileStorageService.savePreview(file);
 
-        String fileType = fileValidator.validate(file);
+        String fileType = fileValidator.validateIsImageOrPdf(file);
 
         byte[] imageBytes;
 
