@@ -5,6 +5,9 @@ spring:
   application:
     name: ai-service
 
+  config:
+    import: optional:file:.env[.properties]
+
   servlet:
     multipart:
       max-file-size: 20MB
@@ -29,6 +32,14 @@ spring:
           brokers: ${KAFKA_URI:localhost:9092}
 
   ai:
+    model:
+      audio:
+        speech: none
+        transcription: none
+      image: none
+      embedding: none
+      moderation: none
+
     deepseek:
       api-key: ${DEEPSEEK_API_KEY}
       chat:
@@ -42,7 +53,7 @@ spring:
 
 qwen:
   api-key: ${QWEN_API_KEY}
-  base-url: ${QWEN_BASE_URL:https://ws-vwimqjxrathdcsc2.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1}
+  base-url: ${QWEN_BASE_URL:https://dashscope-intl.aliyuncs.com/compatible-mode/v1}
   model: ${QWEN_MODEL:qwen3.7-plus}
   temperature: 0.0
   max-tokens: 20480
@@ -50,3 +61,8 @@ qwen:
 app:
   storage:
     location: ./uploads
+
+eureka:
+    client:
+        service-url:
+            defaultZone: http://localhost:8761/eureka

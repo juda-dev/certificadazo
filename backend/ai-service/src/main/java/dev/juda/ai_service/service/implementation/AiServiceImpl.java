@@ -129,7 +129,7 @@ public class AiServiceImpl implements AiService {
         try {
             reply = (Reply<?>) future.get(Duration.ofSeconds(5).toMillis(), TimeUnit.MILLISECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutCommandException | TimeoutException e) {
-            throw new TimeoutCommandException("auth-service_" + methodName);
+            throw new TimeoutCommandException("ai-service_" + methodName);
         }
 
         return reply;
