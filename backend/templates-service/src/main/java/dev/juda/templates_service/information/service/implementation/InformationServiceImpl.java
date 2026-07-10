@@ -15,9 +15,9 @@ import org.springframework.web.client.RestClient;
 
 import dev.juda.templates_service.information.persistence.entity.Information;
 import dev.juda.templates_service.information.persistence.repository.InformationRepository;
+import dev.juda.templates_service.information.presentation.dto.in.InformationAiResponse;
 import dev.juda.templates_service.information.presentation.dto.in.UserFullNameView;
 import dev.juda.templates_service.information.presentation.dto.out.NameAndFieldsTemplate;
-import dev.juda.templates_service.information.presentation.dto.request.InformationRequest;
 import dev.juda.templates_service.information.presentation.dto.request.ReadInformationRequest;
 import dev.juda.templates_service.information.presentation.dto.response.InformationResponse;
 import dev.juda.templates_service.information.presentation.dto.response.ReadInformationResponse;
@@ -44,7 +44,7 @@ public class InformationServiceImpl implements InformationService {
     @Override
     @Transactional
     @ResponseStatus(code = HttpStatus.CREATED)
-    public Set<InformationResponse> create(Set<InformationRequest> req) {
+    public Set<InformationResponse> create(Set<InformationAiResponse> req) {
         Set<InformationResponse> response = new HashSet<>();
         NameAndFieldsTemplate nameAndFieldsTemplate = templateRepository
                 .findNameAndFieldsById(req.iterator().next().templateId())
@@ -79,7 +79,7 @@ public class InformationServiceImpl implements InformationService {
 
     @Override
     @Transactional
-    public InformationResponse update(InformationId id, InformationRequest req) {
+    public InformationResponse update(InformationId id, InformationAiResponse req) {
         if (!informationRepository.existsById(id)) {
             throw new InformationNotFoundException();
         }
@@ -99,7 +99,7 @@ public class InformationServiceImpl implements InformationService {
     }
 
     private InformationResponse persistInformation(
-            InformationId informationId, InformationRequest req,
+            InformationId informationId, InformationAiResponse req,
             NameAndFieldsTemplate nameAndFieldsTemplate, String userFullName) {
 
         if (!nameAndFieldsTemplate.fields().equals(req.data().keySet())) {
