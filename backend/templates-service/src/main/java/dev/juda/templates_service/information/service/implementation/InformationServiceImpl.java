@@ -46,10 +46,11 @@ public class InformationServiceImpl implements InformationService {
     @ResponseStatus(code = HttpStatus.CREATED)
     public Set<InformationResponse> create(Set<InformationRequest> req) {
         Set<InformationResponse> response = new HashSet<>();
+        NameAndFieldsTemplate nameAndFieldsTemplate = templateRepository
+                .findNameAndFieldsById(req.iterator().next().templateId())
+                .orElseThrow(TemplateNotFoundException::new);
         req.forEach(r -> {
             String userFullName = fetchUserFullName(r.userId()).fullName();
-            NameAndFieldsTemplate nameAndFieldsTemplate = templateRepository.findNameAndFieldsById(r.templateId())
-                    .orElseThrow(TemplateNotFoundException::new);
 
             response.add(persistInformation(null, r, nameAndFieldsTemplate, userFullName));
         });
