@@ -1,6 +1,9 @@
 package dev.juda.templates_service.information.service.implementation;
 
 import dev.juda.templates_service.information.persistence.embeddable.InformationId;
+
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -41,12 +44,17 @@ public class InformationServiceImpl implements InformationService {
     @Override
     @Transactional
     @ResponseStatus(code = HttpStatus.CREATED)
-    public InformationResponse create(InformationRequest req) {
-        String userFullName = fetchUserFullName(req.userId()).fullName();
-        NameAndFieldsTemplate nameAndFieldsTemplate = templateRepository.findNameAndFieldsById(req.templateId())
-                .orElseThrow(TemplateNotFoundException::new);
+    public Set<InformationResponse> create(Set<InformationRequest> req) {
+        Set<InformationResponse> response = new HashSet<>();
+        req.forEach(r -> {
+            String userFullName = fetchUserFullName(r.userId()).fullName();
+            NameAndFieldsTemplate nameAndFieldsTemplate = templateRepository.findNameAndFieldsById(r.templateId())
+                    .orElseThrow(TemplateNotFoundException::new);
 
-        return persistInformation(null, req, nameAndFieldsTemplate, userFullName);
+            response.add(persistInformation(null, r, nameAndFieldsTemplate, userFullName));
+        });
+
+        return response;
     }
 
     @Override

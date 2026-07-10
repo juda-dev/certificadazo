@@ -1,5 +1,7 @@
 package dev.juda.templates_service.information.service.interfaces;
 
+import java.util.Set;
+
 import dev.juda.templates_service.information.persistence.embeddable.InformationId;
 import dev.juda.templates_service.information.presentation.dto.request.InformationRequest;
 import dev.juda.templates_service.information.presentation.dto.request.ReadInformationRequest;
@@ -8,7 +10,7 @@ import dev.juda.templates_service.information.presentation.dto.response.ReadInfo
 
 public interface InformationService {
 
-    InformationResponse create(InformationRequest req);
+    Set<InformationResponse> create(Set<InformationRequest> req);
 
     ReadInformationResponse read(ReadInformationRequest req);
 

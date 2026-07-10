@@ -1,5 +1,6 @@
 package dev.juda.templates_service.information.presentation.controller;
 
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,11 +28,6 @@ public class InformationController {
 
     public InformationController(InformationService informationService) {
         this.informationService = informationService;
-    }
-
-    @PostMapping
-    public InformationResponse create(@Valid @RequestBody InformationRequest req) {
-        return informationService.create(req);
     }
 
     @GetMapping
