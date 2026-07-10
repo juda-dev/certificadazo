@@ -2,6 +2,7 @@ package dev.juda.ai_service.configuration;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.openai.OpenAiChatModel;
@@ -30,6 +31,7 @@ public class QwenAiConfig {
                 .model(model)
                 .temperature(temperature)
                 .maxTokens(maxTokens)
+                .timeout(Duration.ofMinutes(5))
                 .build();
 
         return OpenAiChatModel.builder()
