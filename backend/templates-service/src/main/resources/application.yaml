@@ -19,11 +19,11 @@ spring:
 
     stream:
       bindings:
-        commands-in-0:
+        handleCommands-in-0:
           destination: templates-events
           content-type: application/json
           group: templates-service
-        handleReplies-out-0:
+        handleCommands-out-0:
           destination: templates-replies
           content-type: application/json
 
