@@ -111,14 +111,8 @@ public class TemplateServiceImpl implements TemplateService {
 
     @Override
     @Transactional(readOnly = true)
-    public Set<String> readFieldsById(UUID id) {
-        return templateRepository.findFieldsById(id);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Boolean existsById(UUID id) {
-        return templateRepository.existsById(id);
+    public Set<String> findFieldsById(UUID id) {
+        return templateRepository.findFieldsById(id).orElseThrow(TemplateNotFoundException::new);
     }
 
 }

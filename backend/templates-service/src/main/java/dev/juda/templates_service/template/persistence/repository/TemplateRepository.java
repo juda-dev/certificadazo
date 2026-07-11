@@ -5,6 +5,8 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import dev.juda.templates_service.information.presentation.dto.out.NameAndFieldsTemplate;
 import dev.juda.templates_service.template.persistence.entity.Template;
@@ -13,5 +15,6 @@ public interface TemplateRepository extends JpaRepository<Template, UUID> {
 
     Optional<NameAndFieldsTemplate> findNameAndFieldsById(UUID id);
 
-    Set<String> findFieldsById(UUID id);
+    @Query("SELECT t.fields FROM Template t WHERE t.id = :id")
+    Optional<Set<String>> findFieldsById(@Param("id") UUID id);
 }

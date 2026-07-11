@@ -23,7 +23,5 @@ public interface TemplateService {
 
     void delete(UUID id);
 
-    Set<String> readFieldsById(UUID id);
-
-    Boolean existsById(UUID id);
+    Set<String> findFieldsById(UUID id);
 }
