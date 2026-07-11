@@ -1,6 +1,6 @@
 package dev.juda.templates_service.shared.messaging.dto.out;
 
-import dev.juda.templates_service.template.util.enums.ReplyStatus;
+import dev.juda.templates_service.shared.util.enums.ReplyStatus;
 
 public record Reply<T>(
         ReplyStatus status,
