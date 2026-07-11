@@ -12,18 +12,18 @@ import org.springframework.web.client.RestClient;
 
 import dev.juda.departments_service.department.persistence.entity.Department;
 import dev.juda.departments_service.department.persistence.repository.DepartmentRepository;
-import dev.juda.departments_service.department.presentation.exception.DepartmentNotFoundException;
+import dev.juda.departments_service.department.service.exception.DepartmentNotFoundException;
 import dev.juda.departments_service.position.persistence.entity.Position;
 import dev.juda.departments_service.position.persistence.repository.PositionRepository;
-import dev.juda.departments_service.position.presentation.exception.PositionNotFoundException;
+import dev.juda.departments_service.position.service.exception.PositionNotFoundException;
 import dev.juda.departments_service.user_department.persistence.embeddable.UserDepartmentId;
 import dev.juda.departments_service.user_department.persistence.entity.UserDepartment;
 import dev.juda.departments_service.user_department.persistence.repository.UserDepartmentRepository;
 import dev.juda.departments_service.user_department.presentation.dto.request.DeleteUserDepartmentRequest;
 import dev.juda.departments_service.user_department.presentation.dto.request.UserDepartmentRequest;
 import dev.juda.departments_service.user_department.presentation.dto.response.UserDepartmentResponse;
-import dev.juda.departments_service.user_department.presentation.exception.UserDepartmentAlreadyExistsException;
-import dev.juda.departments_service.user_department.presentation.exception.UserDepartmentNotFoundException;
+import dev.juda.departments_service.user_department.service.exception.UserDepartmentAlreadyExistsException;
+import dev.juda.departments_service.user_department.service.exception.UserDepartmentNotFoundException;
 import dev.juda.departments_service.user_department.service.interfaces.UserDepartmentService;
 
 @Service

@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import dev.juda.departments_service.department.presentation.exception.DepartmentAlreadyExistsException;
-import dev.juda.departments_service.department.presentation.exception.DepartmentNotFoundException;
-import dev.juda.departments_service.position.presentation.exception.PositionAlreadyExistsException;
-import dev.juda.departments_service.position.presentation.exception.PositionNotFoundException;
+import dev.juda.departments_service.department.service.exception.DepartmentAlreadyExistsException;
+import dev.juda.departments_service.department.service.exception.DepartmentNotFoundException;
+import dev.juda.departments_service.position.service.exception.PositionAlreadyExistsException;
+import dev.juda.departments_service.position.service.exception.PositionNotFoundException;
 import dev.juda.departments_service.shared.dto.ErrorResponse;
 
 import static dev.juda.departments_service.position.util.enums.PositionErrorCatalog.*;

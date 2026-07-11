@@ -20,7 +20,7 @@ import dev.juda.templates_service.template.presentation.dto.in.DepartmentRespons
 import dev.juda.templates_service.template.presentation.dto.response.ReadAllTemplateResponse;
 import dev.juda.templates_service.template.presentation.dto.response.ReadTemplateResponse;
 import dev.juda.templates_service.template.presentation.dto.response.TemplateResponse;
-import dev.juda.templates_service.template.presentation.exception.TemplateNotFoundException;
+import dev.juda.templates_service.template.service.exception.TemplateNotFoundException;
 import dev.juda.templates_service.template.service.interfaces.TemplateService;
 
 @Service

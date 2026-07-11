@@ -21,11 +21,11 @@ import dev.juda.templates_service.information.presentation.dto.out.NameAndFields
 import dev.juda.templates_service.information.presentation.dto.request.ReadInformationRequest;
 import dev.juda.templates_service.information.presentation.dto.response.InformationResponse;
 import dev.juda.templates_service.information.presentation.dto.response.ReadInformationResponse;
-import dev.juda.templates_service.information.presentation.exception.InconsistentFieldsException;
-import dev.juda.templates_service.information.presentation.exception.InformationNotFoundException;
+import dev.juda.templates_service.information.service.exception.InconsistentFieldsException;
+import dev.juda.templates_service.information.service.exception.InformationNotFoundException;
 import dev.juda.templates_service.information.service.interfaces.InformationService;
 import dev.juda.templates_service.template.persistence.repository.TemplateRepository;
-import dev.juda.templates_service.template.presentation.exception.TemplateNotFoundException;
+import dev.juda.templates_service.template.service.exception.TemplateNotFoundException;
 
 @Service
 public class InformationServiceImpl implements InformationService {

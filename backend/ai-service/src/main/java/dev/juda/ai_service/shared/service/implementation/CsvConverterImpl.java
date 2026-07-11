@@ -11,7 +11,7 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import dev.juda.ai_service.shared.service.interfaces.CsvConverter;
-import dev.juda.ai_service.template.presentation.exception.InvalidFileTypeException;
+import dev.juda.ai_service.template.service.exception.InvalidFileTypeException;
 
 @Service
 public class CsvConverterImpl implements CsvConverter {

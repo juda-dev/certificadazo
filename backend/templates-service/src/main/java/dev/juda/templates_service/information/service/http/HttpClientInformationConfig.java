@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.client.RestClient;
 
-import dev.juda.templates_service.information.presentation.exception.UserNotFoundException;
+import dev.juda.templates_service.information.service.exception.UserNotFoundException;
 
 @Configuration
 public class HttpClientInformationConfig {

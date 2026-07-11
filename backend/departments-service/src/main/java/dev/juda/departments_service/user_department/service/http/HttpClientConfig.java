@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.client.RestClient;
 
-import dev.juda.departments_service.user_department.presentation.exception.NonExistsUserException;
+import dev.juda.departments_service.user_department.service.exception.NonExistsUserException;
 
 @Configuration
 public class HttpClientConfig {

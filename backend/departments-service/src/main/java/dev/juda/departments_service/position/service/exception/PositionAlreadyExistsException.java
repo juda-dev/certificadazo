@@ -1,4 +1,4 @@
-package dev.juda.departments_service.position.presentation.exception;
+package dev.juda.departments_service.position.service.exception;
 
 public class PositionAlreadyExistsException extends RuntimeException {
 

@@ -8,7 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import dev.juda.ai_service.shared.service.interfaces.FileValidator;
 import dev.juda.ai_service.shared.util.enums.SupportedFileType;
-import dev.juda.ai_service.template.presentation.exception.InvalidFileTypeException;
+import dev.juda.ai_service.template.service.exception.InvalidFileTypeException;
 
 @Service
 public class FileValidatorImpl implements FileValidator {

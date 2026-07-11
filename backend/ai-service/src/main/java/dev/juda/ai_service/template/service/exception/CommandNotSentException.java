@@ -1,4 +1,4 @@
-package dev.juda.ai_service.template.presentation.exception;
+package dev.juda.ai_service.template.service.exception;
 
 public class CommandNotSentException extends RuntimeException {
 

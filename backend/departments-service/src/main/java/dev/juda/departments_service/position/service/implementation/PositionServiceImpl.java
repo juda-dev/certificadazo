@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import dev.juda.departments_service.department.persistence.entity.Department;
 import dev.juda.departments_service.department.persistence.repository.DepartmentRepository;
-import dev.juda.departments_service.department.presentation.exception.DepartmentNotFoundException;
+import dev.juda.departments_service.department.service.exception.DepartmentNotFoundException;
 import dev.juda.departments_service.position.persistence.entity.Position;
 import dev.juda.departments_service.position.persistence.repository.PositionRepository;
 import dev.juda.departments_service.position.presentation.dto.request.PositionRequest;
 import dev.juda.departments_service.position.presentation.dto.response.PositionResponse;
-import dev.juda.departments_service.position.presentation.exception.PositionAlreadyExistsException;
-import dev.juda.departments_service.position.presentation.exception.PositionNotFoundException;
+import dev.juda.departments_service.position.service.exception.PositionAlreadyExistsException;
+import dev.juda.departments_service.position.service.exception.PositionNotFoundException;
 import dev.juda.departments_service.position.service.interfaces.PositionService;
 
 @Service

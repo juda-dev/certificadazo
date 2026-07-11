@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.client.RestClient;
 
-import dev.juda.templates_service.template.presentation.exception.DepartmentNotFoundException;
+import dev.juda.templates_service.template.service.exception.DepartmentNotFoundException;
 
 @Configuration
 public class HttpClientTemplateConfig {

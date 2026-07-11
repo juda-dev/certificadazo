@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 
-import dev.juda.ai_service.template.presentation.exception.PromptNotFoundException;
+import dev.juda.ai_service.template.service.exception.PromptNotFoundException;
 
 @Configuration
 public class QwenAiConfig {

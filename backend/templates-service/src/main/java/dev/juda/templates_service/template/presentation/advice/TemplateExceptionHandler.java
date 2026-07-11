@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import dev.juda.templates_service.template.presentation.dto.response.ErrorResponse;
-import dev.juda.templates_service.template.presentation.exception.DepartmentNotFoundException;
-import dev.juda.templates_service.template.presentation.exception.TemplateNotFoundException;
+import dev.juda.templates_service.template.service.exception.DepartmentNotFoundException;
+import dev.juda.templates_service.template.service.exception.TemplateNotFoundException;
 
 import static dev.juda.templates_service.template.util.enums.TemplateErrorCatalog.*;
 

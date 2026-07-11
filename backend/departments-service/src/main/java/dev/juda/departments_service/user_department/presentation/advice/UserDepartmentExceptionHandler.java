@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import dev.juda.departments_service.shared.dto.ErrorResponse;
-import dev.juda.departments_service.user_department.presentation.exception.NonExistsUserException;
-import dev.juda.departments_service.user_department.presentation.exception.UserDepartmentAlreadyExistsException;
-import dev.juda.departments_service.user_department.presentation.exception.UserDepartmentNotFoundException;
+import dev.juda.departments_service.user_department.service.exception.NonExistsUserException;
+import dev.juda.departments_service.user_department.service.exception.UserDepartmentAlreadyExistsException;
+import dev.juda.departments_service.user_department.service.exception.UserDepartmentNotFoundException;
 
 import static dev.juda.departments_service.user_department.util.enums.UserDepartmentErrorCatalog.*;
 

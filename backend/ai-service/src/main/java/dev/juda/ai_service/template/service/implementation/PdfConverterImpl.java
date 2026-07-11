@@ -11,7 +11,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.springframework.stereotype.Service;
 
-import dev.juda.ai_service.template.presentation.exception.InvalidFileTypeException;
+import dev.juda.ai_service.template.service.exception.InvalidFileTypeException;
 import dev.juda.ai_service.template.service.interfaces.PdfConverter;
 
 @Service
