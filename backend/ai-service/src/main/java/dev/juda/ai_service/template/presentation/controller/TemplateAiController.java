@@ -10,20 +10,21 @@ import org.springframework.web.multipart.MultipartFile;
 import dev.juda.ai_service.template.presentation.dto.in.TemplateResponse;
 import dev.juda.ai_service.template.presentation.dto.request.TemplateRequest;
 import dev.juda.ai_service.template.service.interfaces.TemplateAiService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/ai")
-public class AiController {
+public class TemplateAiController {
 
     private final TemplateAiService aiService;
 
-    public AiController(TemplateAiService aiService) {
+    public TemplateAiController(TemplateAiService aiService) {
         this.aiService = aiService;
     }
 
     @PostMapping(value = "/create-template", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public TemplateResponse createTemplate(@RequestPart("file") MultipartFile file,
-            @RequestPart("data") TemplateRequest req) {
+            @Valid @RequestPart("data") TemplateRequest req) {
         return aiService.createTemplate(file, req);
     }
 
