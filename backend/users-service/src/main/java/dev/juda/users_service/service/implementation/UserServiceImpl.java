@@ -156,4 +156,16 @@ public class UserServiceImpl implements UserService {
         return new UserFullNameView(user.getFirstName() + " " + user.getLastName());
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public UUID findIdByDocumentId(String documentid) {
+        return userRepository.findIdByDocumentId(documentid).orElseThrow(NonExistentUser::new);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UUID findIdByEmail(String email) {
+        return userRepository.findIdByEmail(email).orElseThrow(NonExistentUser::new);
+    }
+
 }

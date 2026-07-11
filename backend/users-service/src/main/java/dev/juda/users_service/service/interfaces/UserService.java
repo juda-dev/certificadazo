@@ -21,4 +21,8 @@ public interface UserService {
     void delete(UUID id);
 
     UserFullNameView userFullNameView(UUID id);
+
+    UUID findIdByDocumentId(String documentid);
+
+    UUID findIdByEmail(String email);
 }

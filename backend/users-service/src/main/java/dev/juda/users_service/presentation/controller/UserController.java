@@ -60,4 +60,14 @@ public class UserController {
     public UserFullNameView userFullNameView(@PathVariable UUID id) {
         return userService.userFullNameView(id);
     }
+
+    @GetMapping("/find-id/document-id/{documentId}")
+    public UUID findByDocumentId(@PathVariable String documentId) {
+        return userService.findIdByDocumentId(documentId);
+    }
+
+    @GetMapping("/find-id/email/{email}")
+    public UUID findByEmail(@PathVariable String email) {
+        return userService.findIdByEmail(email);
+    }
 }
