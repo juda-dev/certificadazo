@@ -11,7 +11,7 @@ public class HttpClientTemplateConfig {
     @Bean("departments")
     RestClient departmentsRestClient(@LoadBalanced RestClient.Builder builder) {
         return builder
-                .baseUrl("http://departments-service/departments/")
+                .baseUrl("http://departments-service/departments")
                 .build();
     }
 }
