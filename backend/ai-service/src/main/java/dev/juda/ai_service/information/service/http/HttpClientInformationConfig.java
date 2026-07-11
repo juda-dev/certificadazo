@@ -11,7 +11,14 @@ public class HttpClientInformationConfig {
     @Bean("templates")
     RestClient templatesRestClient(@LoadBalanced RestClient.Builder builder) {
         return builder
-                .baseUrl("http://templates-service/templates/")
+                .baseUrl("http://templates-service/templates")
+                .build();
+    }
+
+    @Bean("users")
+    RestClient usersRestClient(@LoadBalanced RestClient.Builder builder) {
+        return builder
+                .baseUrl("http://users-service/users")
                 .build();
     }
 }
