@@ -70,4 +70,9 @@ public class UserController {
     public UUID findByEmail(@PathVariable String email) {
         return userService.findIdByEmail(email);
     }
+
+    @GetMapping("/exists/{id}")
+    public Boolean existsById(@PathVariable UUID id) {
+        return userService.existsById(id);
+    }
 }

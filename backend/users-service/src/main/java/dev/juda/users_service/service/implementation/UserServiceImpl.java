@@ -168,4 +168,10 @@ public class UserServiceImpl implements UserService {
         return userRepository.findIdByEmail(email).orElseThrow(NonExistentUser::new);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Boolean existsById(UUID id) {
+        return userRepository.existsById(id);
+    }
+
 }

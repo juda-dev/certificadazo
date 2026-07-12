@@ -25,4 +25,6 @@ public interface UserService {
     UUID findIdByDocumentId(String documentid);
 
     UUID findIdByEmail(String email);
+
+    Boolean existsById(UUID id);
 }
