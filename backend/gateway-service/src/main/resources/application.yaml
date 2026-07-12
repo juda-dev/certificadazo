@@ -54,6 +54,13 @@ spring:
               filters:
                 - TokenRelay=
                 - StripPrefix=1
+            - id: certificate-service
+              uri: lb://certificate-service
+              predicates:
+                - Path=/api/certificates/**
+              filters:
+                - TokenRelay=
+                - StripPrefix=1
 
 eureka:
     client:
