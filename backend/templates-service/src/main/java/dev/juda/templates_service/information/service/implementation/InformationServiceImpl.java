@@ -24,6 +24,7 @@ import dev.juda.templates_service.information.presentation.dto.response.ReadInfo
 import dev.juda.templates_service.information.service.exception.InconsistentFieldsException;
 import dev.juda.templates_service.information.service.exception.InformationNotFoundException;
 import dev.juda.templates_service.information.service.interfaces.InformationService;
+import dev.juda.templates_service.template.persistence.entity.Template;
 import dev.juda.templates_service.template.persistence.repository.TemplateRepository;
 import dev.juda.templates_service.template.service.exception.TemplateNotFoundException;
 
@@ -71,9 +72,11 @@ public class InformationServiceImpl implements InformationService {
     @Transactional(readOnly = true)
     public ReadInformationResponse read(ReadInformationRequest req) {
         InformationId informationId = new InformationId(req.templateId(), req.userId());
+        Information information = informationRepository.findById(informationId)
+                .orElseThrow(InformationNotFoundException::new);
+        Template template = templateRepository.findById(req.templateId()).get();
 
-        return ReadInformationResponse.from(
-                informationRepository.findById(informationId).orElseThrow(InformationNotFoundException::new));
+        return ReadInformationResponse.from(information, template);
     }
 
     @Override

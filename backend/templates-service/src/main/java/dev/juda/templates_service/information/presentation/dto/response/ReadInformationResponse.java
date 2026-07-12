@@ -3,11 +3,14 @@ package dev.juda.templates_service.information.presentation.dto.response;
 import java.util.Map;
 
 import dev.juda.templates_service.information.persistence.entity.Information;
+import dev.juda.templates_service.template.persistence.entity.Template;
 
 public record ReadInformationResponse(
                 Map<String, Object> data) {
 
-        public static ReadInformationResponse from(Information information) {
-                return new ReadInformationResponse(information.getData());
+        public static ReadInformationResponse from(Information information, Template template) {
+                Map<String, Object> response = information.getData();
+                response.putAll(template.getImagesSrc());
+                return new ReadInformationResponse(response);
         }
 }
