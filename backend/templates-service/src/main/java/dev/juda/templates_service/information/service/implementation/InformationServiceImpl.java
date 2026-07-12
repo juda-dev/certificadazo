@@ -73,8 +73,7 @@ public class InformationServiceImpl implements InformationService {
         InformationId informationId = new InformationId(req.templateId(), req.userId());
 
         return ReadInformationResponse.from(
-                informationRepository.save(
-                        informationRepository.findById(informationId).orElseThrow(InformationNotFoundException::new)));
+                informationRepository.findById(informationId).orElseThrow(InformationNotFoundException::new));
     }
 
     @Override
