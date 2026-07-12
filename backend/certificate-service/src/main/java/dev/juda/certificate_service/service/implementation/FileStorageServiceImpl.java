@@ -24,7 +24,7 @@ public class FileStorageServiceImpl implements FileStorageService {
 
     private final Path root;
 
-    public FileStorageServiceImpl(Path root, StorageProperties properties) {
+    public FileStorageServiceImpl(StorageProperties properties) {
         this.root = Paths.get(properties.location());
         try {
             Files.createDirectories(root);

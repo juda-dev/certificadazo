@@ -69,7 +69,7 @@ public class CertificateServiceImpl implements CertificateService {
 
     private ReadInformationResponse fetchInformation(UUID userId, UUID templateId) {
         return templatesRestClient.get()
-                .uri("/{userId}/{templateId}", userId, templateId)
+                .uri("/information/{userId}/{templateId}", userId, templateId)
                 .retrieve()
                 .body(ReadInformationResponse.class);
     }
