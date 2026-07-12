@@ -31,6 +31,10 @@
 		{
 			"name": "AI 🤖🇨🇴",
 			"path": "backend/ai-service"
+		},
+		{
+			"name": "Certificate 📜",
+			"path": "backend/certificate-service"
 		}
 	],
 	"settings": {
