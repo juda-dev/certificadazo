@@ -37,6 +37,16 @@ public class Certificate {
     @Column(nullable = false, name = "template_id")
     private UUID templateId;
 
+    public Certificate() {
+    }
+
+    public Certificate(String code, String src, UUID userId, UUID templateId) {
+        this.code = code;
+        this.src = src;
+        this.userId = userId;
+        this.templateId = templateId;
+    }
+
     @PrePersist
     public void prePersist() {
         this.issueDate = LocalDateTime.now();
