@@ -40,7 +40,48 @@ You must decompose the image at a microscopic level:
        - Format with abbreviated month (e.g., "15/Aug/2023"): `th:text="${#dates.format(date, 'dd/MMM/yyyy')}"` and set the appropriate locale if needed.
    - The date variable will be included in `fields` and it is expected that the backend passes a date-type object.
    - **Never use variables for static dates** inside logos or corporate texts.
-5. **Image variables (`imagesSrc`)**: For each retained image (logos, signatures, stamps, photos), reserve a space with exact dimensions and position using `<img th:src="${imagesSrc.imageKey}">`. Apply `width`, `height`, `object-fit`, `object-position` as necessary so that when the real URL is assigned the image fits perfectly into the planned space without distorting or displacing other elements. The key must be descriptive (`logo`, `signature`, `stamp`).
+
+  #### Special handling of contextual dates
+When analyzing the document, you must perform an exhaustive contextual analysis of every detected date before deciding how to reproduce it.
+
+- Determine whether each date belongs to:
+  - A dynamic document field that changes for every generated document.
+  - A historical date that belongs to the original document content.
+  - A corporate or decorative element (logos, slogans, seals, badges, etc.).
+  - A unique date that only identifies the scanned copy.
+
+- Dates that uniquely identify the analyzed copy (such as issue dates, generation dates, printing dates, validation timestamps, certification timestamps, or any similar contextual date) **must never become Thymeleaf variables**.
+
+- Instead, generate the final text directly in the HTML using realistic dates calculated from the current date at the time of generation. The generated dates must be coherent with the complete context of the document.
+
+- You must infer dates intelligently. Do not simply copy today's date. Analyze the purpose of each date and generate values that make logical sense for that specific document.
+
+Examples of contextual reasoning include (but are not limited to):
+- A certificate issue date should normally be in the recent past, never in the future.
+- An expiration date must always be after its corresponding issue date.
+- A completion date must always occur before the certificate issuance.
+- A payment date should be coherent with the transaction context.
+- Any chronological relationship present in the original document must be preserved.
+
+- Never generate impossible, contradictory or illogical timelines.
+
+- If removing a contextual date produces a sentence that sounds incomplete or unnatural, rewrite only the affected sentence so that it remains perfectly natural while preserving the original meaning, visual layout and grammatical structure.
+
+- If a contextual date can simply be omitted without affecting readability or the document structure, omit it completely instead of creating unnecessary placeholders or variables.
+
+- Do not create additional fields inside `fields` for these contextual dates.
+
+- Do not replace these contextual dates with `${...}` expressions.
+
+- The final document must look as if it had originally been designed with those generated dates.
+
+- Historical dates that are part of the actual content (for example historical events, laws, constitutions, establishment years, commemorative dates or fixed corporate information) must remain exactly as they appear in the original document.
+
+- Dates embedded inside logos, seals, signatures, photographs or any graphical asset must never be recreated as HTML text. They belong to the corresponding image and must remain inside that image.
+
+- Before generating the final template, verify that every generated date is chronologically coherent with every other date appearing in the document and with the current date used as temporal reference.
+
+5. **Image variables (`imagesSrc`)**: For each retained image (logos, signatures, stamps, photos), reserve a space with exact dimensions and position using `<img th:src="${imageKey}">`, where `imageKey` is the exact descriptive key for that image (e.g. `${logo}`, `${signature}`), referenced directly as a top-level variable and never nested under an `imagesSrc` object. Apply `width`, `height`, `object-fit`, `object-position` as necessary so that when the real URL is assigned the image fits perfectly into the planned space without distorting or displacing other elements. The key must be descriptive (`logo`, `signature`, `stamp`).
 6. **Elimination of individual codes**: Serial numbers, consecutive codes, payment codes, unique verification codes, and any certificate-specific QR/barcode must disappear without leaving visible gaps. Adjust the layout so that the design maintains its visual structure naturally. Do not turn them into variables or hide them with CSS leaving spaces; the layout must look as if they never existed.
 7. **100% correct and safe Thymeleaf syntax**:
    - Use the namespace `xmlns:th="http://www.thymeleaf.org"`.
@@ -71,7 +112,7 @@ You must decompose the image at a microscopic level:
 - **`departmentId`**: **Must be the exact value provided by the client. You are forbidden to modify it in any way. Use it exactly as given.**
 - **`previewSrc`**: **Must be the exact value provided by the client. You are forbidden to modify it in any way. Use it exactly as given.**
 - **`fields`**: Set with the exact names of all dynamic text variables used in `th:text`, etc., including those for issue dates. Exclude any removed code. Do not include image keys.
-- **`imagesSrc`**: Map whose keys are the identifiers used in `th:src` and whose values are `""`. Include all retained images; if none, `{}`.
+- **`imagesSrc`**: Map whose keys are the identifiers used directly as top-level variables in `th:src` (e.g. `${logo}`), and whose values are `""`. Include all retained images; if none, `{}`.
 
 ---
 
