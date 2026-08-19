@@ -1,8 +1,10 @@
 package dev.juda.auth_service.presentation.advice;
 
-import java.time.LocalDateTime;
-import java.util.Collections;
-
+import dev.juda.auth_service.presentation.dto.response.ErrorResponse;
+import dev.juda.auth_service.service.exception.InvalidCredentialsException;
+import dev.juda.auth_service.service.exception.RoleNotFoundException;
+import dev.juda.auth_service.service.exception.UserNotCreatedException;
+import dev.juda.auth_service.service.exception.UserNotUpdatedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.handler.annotation.support.MethodArgumentNotValidException;
 import org.springframework.validation.BindingResult;
@@ -11,11 +13,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import dev.juda.auth_service.presentation.dto.response.ErrorResponse;
-import dev.juda.auth_service.service.exception.InvalidCredentialsException;
-import dev.juda.auth_service.service.exception.RoleNotFoundException;
-import dev.juda.auth_service.service.exception.UserNotCreatedException;
-import dev.juda.auth_service.service.exception.UserNotUpdatedException;
+import java.time.LocalDateTime;
+import java.util.Collections;
 
 import static dev.juda.auth_service.util.enums.ErrorCatalog.*;
 
@@ -46,7 +45,7 @@ public class GlobalExceptionHandler {
     
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(RoleNotFoundException.class)
-    public ErrorResponse hendleRoleNotFoundException(RoleNotFoundException ex) {
+    public ErrorResponse handlerRoleNotFoundException(RoleNotFoundException ex) {
         return new ErrorResponse(
                 ROLE_NOT_FOUND.getCode(),
                 HttpStatus.NOT_FOUND,
@@ -57,7 +56,7 @@ public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(InvalidCredentialsException.class)
-    public ErrorResponse hendleInvalidCredentialsException(InvalidCredentialsException ex) {
+    public ErrorResponse handlerInvalidCredentialsException(InvalidCredentialsException ex) {
         return new ErrorResponse(
                 INVALID_CREDENTIALS.getCode(),
                 HttpStatus.UNAUTHORIZED,
