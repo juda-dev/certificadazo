@@ -34,6 +34,7 @@ public class UserCommandConsumer {
     public Function<Message<Command<Object>>, Message<Reply<Object>>> handleCommands() {
         return msg -> {
             LOG.trace("Starting method handleCommands with command sent to Auth-Service");
+            LOG.debug("Received command {}", msg.getPayload());
 
             String correlationId = msg.getHeaders().get("correlationId").toString();
             if (correlationId == null || correlationId.isBlank()) {
