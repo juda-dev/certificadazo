@@ -1,24 +1,5 @@
 package dev.juda.auth_service.service.implementation;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.UUID;
-
-import org.keycloak.admin.client.Keycloak;
-import org.keycloak.admin.client.resource.UserResource;
-import org.keycloak.admin.client.resource.UsersResource;
-import org.keycloak.representations.idm.CredentialRepresentation;
-import org.keycloak.representations.idm.RoleRepresentation;
-import org.keycloak.representations.idm.UserRepresentation;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestClient;
-import org.springframework.web.client.RestClientException;
-
 import dev.juda.auth_service.messaging.dto.in.CreateUserRequest;
 import dev.juda.auth_service.messaging.dto.in.PasswordChangeRequest;
 import dev.juda.auth_service.messaging.dto.in.UpdateUserRequest;
@@ -35,12 +16,33 @@ import dev.juda.auth_service.util.enums.ReplyStatus;
 import dev.juda.auth_service.util.enums.Roles;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.core.Response;
+import org.keycloak.admin.client.Keycloak;
+import org.keycloak.admin.client.resource.UserResource;
+import org.keycloak.admin.client.resource.UsersResource;
+import org.keycloak.representations.idm.CredentialRepresentation;
+import org.keycloak.representations.idm.RoleRepresentation;
+import org.keycloak.representations.idm.UserRepresentation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestClientException;
+
+import java.util.Collections;
+import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class AuthServiceImpl implements AuthService {
 
     private final RestClient restClient;
     private final Keycloak keycloak;
+    private static final Logger LOG = LoggerFactory.getLogger(AuthServiceImpl.class);
 
     @Value("${keycloak.server-url}")
     private String keycloakServerUrl;
@@ -62,6 +64,8 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public CreateUserReply create(CreateUserRequest req) {
         try {
+            LOG.trace("Starting user creation");
+
             UserRepresentation user = new UserRepresentation();
             user.setUsername(req.documentId());
             user.setEmail(req.email());
@@ -73,11 +77,14 @@ public class AuthServiceImpl implements AuthService {
             UsersResource usersResource = keycloak.realm(realm).users();
             try (Response response = usersResource.create(user)) {
                 if (response.getStatus() != 201) {
+                    LOG.warn("User creation failed with status code {}", response.getStatus());
                     throw new UserNotCreatedException();
                 }
 
                 String location = response.getHeaderString("Location");
                 String userId = location.substring(location.lastIndexOf('/') + 1);
+
+                LOG.info("User {} successfully created", userId);
 
                 assignRole(userId);
 
@@ -86,23 +93,31 @@ public class AuthServiceImpl implements AuthService {
                 return new CreateUserReply(UUID.fromString(userId));
             }
         } catch (Exception e) {
+            LOG.error("Error {} while trying to create a user", e.getMessage());
             throw new UserNotCreatedException();
         }
     }
 
     private void assignRole(String userId) {
         try {
+            LOG.trace("Starting role assignment to user {}", userId);
+
             UserResource userResource = keycloak.realm(realm).users().get(userId);
             RoleRepresentation role = keycloak.realm(realm).roles()
                     .get(Roles.USER.getName()).toRepresentation();
             userResource.roles().realmLevel().add(Collections.singletonList(role));
+
+            LOG.info("Role {} successfully assigned to user {}", role.getName(), userId);
         } catch (NotFoundException e) {
+            LOG.warn("User {} not found", userId);
             throw new RoleNotFoundException();
         }
     }
 
     @Override
     public AuthResponse login(AuthRequest req) {
+        LOG.trace("Starting login process for user {}", req.username());
+
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("client_id", clientId);
         body.add("client_secret", clientSecret);
@@ -121,8 +136,11 @@ public class AuthServiceImpl implements AuthService {
                     .body(Map.class);
 
             if (tokenData == null) {
+                LOG.error("Token data is null");
                 throw new RuntimeException("Empty authentication response");
             }
+
+            LOG.info("User {} has successfully logged in", req.username());
 
             return new AuthResponse(
                     (String) tokenData.get("access_token"),
@@ -131,14 +149,17 @@ public class AuthServiceImpl implements AuthService {
                     (String) tokenData.get("token_type"));
 
         } catch (HttpClientErrorException e) {
+            LOG.warn("User {} could not be logged in", req.username());
             throw new InvalidCredentialsException();
         } catch (RestClientException e) {
+            LOG.error("Unexpected communication error with the authentication server", e);
             throw new RuntimeException("Unexpected communication error with the authentication server", e);
         }
     }
 
     @Override
     public void update(UUID userId, UpdateUserRequest req) {
+        LOG.trace("Starting user update {}", userId);
         try {
             UserRepresentation user = new UserRepresentation();
             user.setFirstName(req.firstName());
@@ -148,13 +169,17 @@ public class AuthServiceImpl implements AuthService {
 
             keycloak.realm(realm).users().get(userId.toString())
                     .update(user);
+
+            LOG.info("User {} successfully updated", userId);
         } catch (Exception e) {
+            LOG.error("Error {} while trying to update a user {}", e.getMessage(), userId);
             throw new UserNotUpdatedException();
         }
     }
 
     @Override
     public Reply<?> updatePassword(UUID userId, PasswordChangeRequest req) {
+        LOG.trace("Starting user password update {}", userId);
         try {
             UserResource userResource = keycloak.realm(realm).users().get(userId.toString());
             UserRepresentation user = userResource.toRepresentation();
@@ -162,6 +187,7 @@ public class AuthServiceImpl implements AuthService {
             try {
                 login(new AuthRequest(user.getUsername(), req.currentPassword()));
             } catch (InvalidCredentialsException e) {
+                LOG.warn("User {} could not be logged in", userId);
                 return new Reply<>(
                         ReplyStatus.ERROR,
                         "The current password is incorrect.",
@@ -170,11 +196,15 @@ public class AuthServiceImpl implements AuthService {
 
             setPassword(userId.toString(), req.newPassword());
 
+            LOG.info("User password {} successfully updated", userId);
+
             return new Reply<>(ReplyStatus.SUCCESS, "Password successfully updated", null);
 
         } catch (NotFoundException e) {
+            LOG.warn("User {} not found", userId);
             return new Reply<>(ReplyStatus.ERROR, "User not found.", null);
         } catch (Exception e) {
+            LOG.warn("Error {} while trying to update user's password {}", e.getMessage(), userId);
             return new Reply<>(
                     ReplyStatus.ERROR,
                     "The password was not updated. Please check that your current password is correct and that your new password meets the password requirements.",
@@ -183,6 +213,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private void setPassword(String userId, String password) {
+        LOG.trace("Starting password assignment to user {}", userId);
         CredentialRepresentation credential = new CredentialRepresentation();
         credential.setType(CredentialRepresentation.PASSWORD);
         credential.setValue(password);
@@ -190,15 +221,20 @@ public class AuthServiceImpl implements AuthService {
 
         keycloak.realm(realm).users().get(userId)
                 .resetPassword(credential);
+        LOG.info("Password assigned to the user {}", userId);
     }
 
     @Override
     public void delete(UUID userId) {
+        LOG.trace("Initiating user deactivation {}", userId);
+
         UserResource userResource = keycloak.realm(realm).users().get(userId.toString());
         UserRepresentation user = userResource.toRepresentation();
         user.setEnabled(false);
 
         keycloak.realm(realm).users().get(userId.toString())
                 .update(user);
+
+        LOG.info("User {} successfully deactivated", userId);
     }
 }
