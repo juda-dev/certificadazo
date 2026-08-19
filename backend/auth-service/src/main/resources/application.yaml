@@ -5,6 +5,10 @@ spring:
   application:
     name: auth-service
 
+  threads:
+    virtual:
+      enabled: true
+
   security:
     oauth2:
       resourceserver:
@@ -27,6 +31,7 @@ spring:
       kafka:
         binder:
           brokers: localhost:9092
+          enable-observation: true
 
 keycloak:
   server-url: http://localhost:8080
@@ -40,3 +45,24 @@ eureka:
   client:
     service-url:
       defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+
+management:
+  opentelemetry:
+    resource-attributes:
+      service.name: ${spring.application.name}
+    tracing:
+      export:
+        otlp:
+          endpoint: http://localhost:4318/v1/traces
+    logging:
+      export:
+        otlp:
+          endpoint: http://localhost:4318/v1/logs
+  tracing:
+    sampling:
+      probability: 1.0
+  otlp:
+    metrics:
+      export:
+        url: http://localhost:4318/v1/metrics
+        enabled: true
