@@ -1,14 +1,5 @@
 package dev.juda.auth_service.messaging.handler;
 
-import java.util.function.Function;
-
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.support.MessageBuilder;
-
-import tools.jackson.databind.ObjectMapper;
-
 import dev.juda.auth_service.messaging.dto.in.Command;
 import dev.juda.auth_service.messaging.dto.in.CreateUserRequest;
 import dev.juda.auth_service.messaging.dto.in.PasswordChangeRequest;
@@ -17,12 +8,22 @@ import dev.juda.auth_service.messaging.dto.out.Reply;
 import dev.juda.auth_service.service.interfaces.AuthService;
 import dev.juda.auth_service.util.enums.CommandType;
 import dev.juda.auth_service.util.enums.ReplyStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.support.MessageBuilder;
+import tools.jackson.databind.ObjectMapper;
+
+import java.util.function.Function;
 
 @Configuration
 public class UserCommandConsumer {
 
     private final AuthService authService;
     private final ObjectMapper mapper;
+    private static final Logger LOG = LoggerFactory.getLogger(UserCommandConsumer.class);
 
     public UserCommandConsumer(AuthService authService, ObjectMapper mapper) {
         this.authService = authService;
@@ -32,8 +33,11 @@ public class UserCommandConsumer {
     @Bean
     public Function<Message<Command<Object>>, Message<Reply<Object>>> handleCommands() {
         return msg -> {
+            LOG.trace("Starting method handleCommands with command sent to Auth-Service");
+
             String correlationId = msg.getHeaders().get("correlationId").toString();
             if (correlationId == null || correlationId.isBlank()) {
+                LOG.error("Correlation ID is null or blank");
                 return MessageBuilder.withPayload(new Reply<>(ReplyStatus.ERROR, "Missing correlationId", null))
                         .build();
             }
@@ -42,7 +46,10 @@ public class UserCommandConsumer {
 
             Reply<Object> reply = switch (cmd.type()) {
                 case CommandType.CREATE -> {
+                    LOG.trace("Entering the case CREATE");
+
                     if (cmd.body() == null) {
+                        LOG.error("Command body is null");
                         yield new Reply<>(ReplyStatus.ERROR, "Create Empty body", null);
                     }
 
@@ -52,11 +59,15 @@ public class UserCommandConsumer {
                 }
 
                 case CommandType.UPDATE -> {
+                    LOG.trace("Entering the case UPDATE");
+
                     if (cmd.body() == null) {
+                        LOG.error("Command body is null");
                         yield new Reply<>(ReplyStatus.ERROR, "Update Empty body", null);
                     }
 
                     if (cmd.id() == null) {
+                        LOG.error("ID is null or blank");
                         yield new Reply<>(ReplyStatus.ERROR, "User Keycloak Id is null", null);
                     }
 
@@ -68,11 +79,15 @@ public class UserCommandConsumer {
                 }
 
                 case CommandType.PASSWORD_UPDATE -> {
+                    LOG.trace("Entering the case PASSWORD_UPDATE");
+
                     if (cmd.body() == null) {
+                        LOG.error("Command body is null");
                         yield new Reply<>(ReplyStatus.ERROR, "Update Empty body", null);
                     }
 
                     if (cmd.id() == null) {
+                        LOG.error("ID is null or blank");
                         yield new Reply<>(ReplyStatus.ERROR, "User Keycloak Id is null", null);
                     }
 
@@ -85,17 +100,16 @@ public class UserCommandConsumer {
                 }
 
                 case CommandType.DELETE -> {
+                    LOG.trace("Entering the case DELETE");
+
                     if (cmd.id() == null) {
+                        LOG.error("ID is null or blank");
                         yield new Reply<>(ReplyStatus.ERROR, "User Keycloak Id is null", null);
                     }
 
                     authService.delete(cmd.id());
 
                     yield new Reply<>(ReplyStatus.SUCCESS, null, null);
-                }
-
-                default -> {
-                    yield new Reply<>(ReplyStatus.ERROR, "Unknown command type", null);
                 }
             };
 
