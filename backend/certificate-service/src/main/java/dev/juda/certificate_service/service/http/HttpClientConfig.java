@@ -1,5 +1,9 @@
 package dev.juda.certificate_service.service.http;
 
+import dev.juda.certificate_service.service.exception.TemplateNotFoundException;
+import dev.juda.certificate_service.service.exception.UserNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,11 +11,10 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.client.RestClient;
 
-import dev.juda.certificate_service.service.exception.TemplateNotFoundException;
-import dev.juda.certificate_service.service.exception.UserNotFoundException;
-
 @Configuration
 public class HttpClientConfig {
+
+    private static final Logger LOG = LoggerFactory.getLogger(HttpClientConfig.class);
 
     @Bean
     @Primary
@@ -30,6 +33,7 @@ public class HttpClientConfig {
         return builder
                 .baseUrl("http://users-service/users")
                 .defaultStatusHandler(HttpStatusCode::is4xxClientError, (request, response) -> {
+                    LOG.warn("User not found");
                     throw new UserNotFoundException();
                 })
                 .build();
@@ -40,6 +44,7 @@ public class HttpClientConfig {
         return builder
                 .baseUrl("http://templates-service/templates")
                 .defaultStatusHandler(HttpStatusCode::is4xxClientError, (request, response) -> {
+                    LOG.warn("Template not found");
                     throw new TemplateNotFoundException();
                 })
                 .build();

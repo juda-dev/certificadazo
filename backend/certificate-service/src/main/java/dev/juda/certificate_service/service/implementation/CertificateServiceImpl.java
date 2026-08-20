@@ -1,12 +1,5 @@
 package dev.juda.certificate_service.service.implementation;
 
-import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestClient;
-
 import dev.juda.certificate_service.persistence.entity.Certificate;
 import dev.juda.certificate_service.persistence.repository.CertificateRepository;
 import dev.juda.certificate_service.presentation.dto.in.ReadInformationResponse;
@@ -17,6 +10,14 @@ import dev.juda.certificate_service.service.interfaces.CertificateService;
 import dev.juda.certificate_service.service.interfaces.FileStorageService;
 import dev.juda.certificate_service.service.interfaces.HtmlService;
 import dev.juda.certificate_service.util.CodeGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestClient;
+
+import java.util.UUID;
 
 @Service
 public class CertificateServiceImpl implements CertificateService {
@@ -26,6 +27,7 @@ public class CertificateServiceImpl implements CertificateService {
     private final RestClient templatesRestClient;
     private final HtmlService htmlService;
     private final FileStorageService fileStorageService;
+    private static final Logger LOG = LoggerFactory.getLogger(CertificateServiceImpl.class);
 
     public CertificateServiceImpl(CertificateRepository repository,
             @Qualifier("users") RestClient usersRestClient,
@@ -41,6 +43,7 @@ public class CertificateServiceImpl implements CertificateService {
     @Override
     @Transactional
     public CertificateResponse create(CertificateRequest req) {
+        LOG.trace("Starting certificate creation for template {} for user {}", req.templateId(), req.userId());
 
         validateExistsUser(req.userId());
 
@@ -51,6 +54,8 @@ public class CertificateServiceImpl implements CertificateService {
         String src = fileStorageService.saveCertificate(pdfCertificate);
 
         String code = CodeGenerator.generateCode();
+
+        LOG.info("Certificate generated with template {} for user {}", req.templateId(), req.userId());
 
         return CertificateResponse.from(repository.save(
                 new Certificate(code, src, req.userId(), req.templateId())));
@@ -63,8 +68,10 @@ public class CertificateServiceImpl implements CertificateService {
                 .retrieve()
                 .body(Boolean.class);
 
-        if (!existsUser)
+        if (!existsUser) {
+            LOG.warn("User with id {} does not exist", userId);
             throw new UserNotFoundException();
+        }
     }
 
     private ReadInformationResponse fetchInformation(UUID userId, UUID templateId) {
