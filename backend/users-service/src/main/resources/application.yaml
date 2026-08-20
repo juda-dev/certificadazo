@@ -34,7 +34,7 @@ spring:
       kafka:
         binder:
           brokers: ${KAFKA_URI:localhost:9092}
-          
+          enable-observation: true
 eureka:
   client:
     service-url:
