@@ -5,6 +5,8 @@ import dev.juda.auth_service.service.exception.InvalidCredentialsException;
 import dev.juda.auth_service.service.exception.RoleNotFoundException;
 import dev.juda.auth_service.service.exception.UserNotCreatedException;
 import dev.juda.auth_service.service.exception.UserNotUpdatedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.handler.annotation.support.MethodArgumentNotValidException;
 import org.springframework.validation.BindingResult;
@@ -21,9 +23,12 @@ import static dev.juda.auth_service.util.enums.ErrorCatalog.*;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final Logger LOG = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(UserNotUpdatedException.class)
     public ErrorResponse handlerUserNotUpdatedException(UserNotUpdatedException ex) {
+        LOG.error("Error updating user");
         return new ErrorResponse(
                 USER_NOT_UPDATED.getCode(),
                 HttpStatus.INTERNAL_SERVER_ERROR,
@@ -35,6 +40,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(UserNotCreatedException.class)
     public ErrorResponse handlerUserNotCreatedException(UserNotCreatedException ex) {
+        LOG.error("Error creating user");
         return new ErrorResponse(
                 USER_NOT_CREATED.getCode(),
                 HttpStatus.INTERNAL_SERVER_ERROR,
@@ -42,10 +48,11 @@ public class GlobalExceptionHandler {
                 null,
                 LocalDateTime.now());
     }
-    
+
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(RoleNotFoundException.class)
     public ErrorResponse handlerRoleNotFoundException(RoleNotFoundException ex) {
+        LOG.warn("Role not found");
         return new ErrorResponse(
                 ROLE_NOT_FOUND.getCode(),
                 HttpStatus.NOT_FOUND,
@@ -57,6 +64,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(InvalidCredentialsException.class)
     public ErrorResponse handlerInvalidCredentialsException(InvalidCredentialsException ex) {
+        LOG.warn("Invalid credentials");
         return new ErrorResponse(
                 INVALID_CREDENTIALS.getCode(),
                 HttpStatus.UNAUTHORIZED,
@@ -70,6 +78,8 @@ public class GlobalExceptionHandler {
     public ErrorResponse handlerMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
 
         BindingResult result = ex.getBindingResult();
+
+        LOG.warn("Invalid arguments in the form: {}", result);
 
         return new ErrorResponse(
                 BAD_CREDENTIALS.getCode(),
@@ -85,6 +95,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public ErrorResponse handlerException(Exception ex) {
+        LOG.error("Error processing request", ex);
 
         return new ErrorResponse(
                 GENERIC_ERROR.getCode(),
