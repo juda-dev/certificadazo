@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(UserNotUpdatedException.class)
-    public ErrorResponse hendleUserNotUpdatedException(UserNotUpdatedException ex) {
+    public ErrorResponse handlerUserNotUpdatedException(UserNotUpdatedException ex) {
         return new ErrorResponse(
                 USER_NOT_UPDATED.getCode(),
                 HttpStatus.INTERNAL_SERVER_ERROR,
@@ -34,7 +34,7 @@ public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(UserNotCreatedException.class)
-    public ErrorResponse hendleUserNotCreatedException(UserNotCreatedException ex) {
+    public ErrorResponse handlerUserNotCreatedException(UserNotCreatedException ex) {
         return new ErrorResponse(
                 USER_NOT_CREATED.getCode(),
                 HttpStatus.INTERNAL_SERVER_ERROR,
