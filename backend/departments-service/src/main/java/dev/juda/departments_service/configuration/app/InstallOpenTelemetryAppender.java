@@ -1,4 +1,4 @@
-package dev.juda.departments_service.shared.configuration;
+package dev.juda.departments_service.configuration.app;
 
 import io.opentelemetry.api.OpenTelemetry;
 import io.opentelemetry.instrumentation.logback.appender.v1_0.OpenTelemetryAppender;

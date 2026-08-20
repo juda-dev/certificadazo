@@ -1,18 +1,5 @@
 package dev.juda.templates_service.template.service.implementation;
 
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.client.RestClient;
-
 import dev.juda.templates_service.shared.messaging.dto.in.TemplateAiResponse;
 import dev.juda.templates_service.template.persistence.entity.Template;
 import dev.juda.templates_service.template.persistence.repository.TemplateRepository;
@@ -22,12 +9,26 @@ import dev.juda.templates_service.template.presentation.dto.response.ReadTemplat
 import dev.juda.templates_service.template.presentation.dto.response.TemplateResponse;
 import dev.juda.templates_service.template.service.exception.TemplateNotFoundException;
 import dev.juda.templates_service.template.service.interfaces.TemplateService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.client.RestClient;
+
+import java.util.Set;
+import java.util.UUID;
 
 @Service
 public class TemplateServiceImpl implements TemplateService {
 
     private final TemplateRepository templateRepository;
     private final RestClient restClient;
+    private static final Logger LOG = LoggerFactory.getLogger(TemplateServiceImpl.class);
 
     public TemplateServiceImpl(TemplateRepository templateRepository,
             @Qualifier("departmentsRestClient") RestClient restClient) {
@@ -39,9 +40,11 @@ public class TemplateServiceImpl implements TemplateService {
     @Transactional
     @ResponseStatus(code = HttpStatus.CREATED)
     public TemplateResponse create(TemplateAiResponse req) {
+        LOG.trace("Starting template creation in the service");
 
         String departmentName = fetchDepartmentName(req.departmentId()).name();
 
+        LOG.info("Template created");
         return persistTemplate(null, req, departmentName);
     }
 
@@ -49,8 +52,10 @@ public class TemplateServiceImpl implements TemplateService {
     @Transactional
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void delete(UUID id) {
+        LOG.trace("Starting template deletion {}", id);
         Template template = templateRepository.findById(id).orElseThrow(TemplateNotFoundException::new);
 
+        LOG.info("Template removed");
         templateRepository.delete(template);
     }
 
@@ -81,12 +86,15 @@ public class TemplateServiceImpl implements TemplateService {
     @Override
     @Transactional
     public TemplateResponse update(UUID id, TemplateAiResponse req) {
+        LOG.trace("Starting template update {}", id);
         String departmentName = fetchDepartmentName(req.departmentId()).name();
 
+        LOG.info("Updated template {}", id);
         return persistTemplate(id, req, departmentName);
     }
 
     private DepartmentResponse fetchDepartmentName(UUID departmentId) {
+        LOG.trace("Fetching department {}", departmentId);
         return restClient.get()
                 .uri("{id}", departmentId)
                 .retrieve()
@@ -94,6 +102,7 @@ public class TemplateServiceImpl implements TemplateService {
     }
 
     private TemplateResponse persistTemplate(UUID templateId, TemplateAiResponse req, String departmentName) {
+        LOG.trace("Initiating template persistence");
         Template template = (templateId != null) ? templateRepository.findById(templateId)
                 .orElseThrow(TemplateNotFoundException::new) : new Template();
 
@@ -106,6 +115,7 @@ public class TemplateServiceImpl implements TemplateService {
 
         Template saved = templateRepository.save(template);
 
+        LOG.info("persisted template");
         return TemplateResponse.from(saved, departmentName);
     }
 

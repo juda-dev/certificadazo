@@ -1,13 +1,5 @@
 package dev.juda.templates_service.shared.messaging.handler;
 
-import java.util.Set;
-import java.util.function.Function;
-
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.support.MessageBuilder;
-
 import dev.juda.templates_service.information.presentation.dto.in.InformationAiResponse;
 import dev.juda.templates_service.information.service.interfaces.InformationService;
 import dev.juda.templates_service.shared.messaging.dto.in.Command;
@@ -16,8 +8,17 @@ import dev.juda.templates_service.shared.messaging.dto.out.Reply;
 import dev.juda.templates_service.shared.util.enums.CommandType;
 import dev.juda.templates_service.shared.util.enums.ReplyStatus;
 import dev.juda.templates_service.template.service.interfaces.TemplateService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.support.MessageBuilder;
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
+
+import java.util.Set;
+import java.util.function.Function;
 
 @Configuration
 public class AiCommandConsumer {
@@ -25,6 +26,7 @@ public class AiCommandConsumer {
     private final InformationService informationService;
     private final TemplateService templateService;
     private final ObjectMapper mapper;
+    private static final Logger LOG = LoggerFactory.getLogger(AiCommandConsumer.class);
 
     public AiCommandConsumer(TemplateService templateService, ObjectMapper mapper,
             InformationService informationService) {
@@ -36,8 +38,10 @@ public class AiCommandConsumer {
     @Bean
     Function<Message<Command<Object>>, Message<Reply<Object>>> handleCommands() {
         return msg -> {
+            LOG.trace("Initiating processing of command received from AI service");
             String correlationId = msg.getHeaders().get("correlationId").toString();
             if (correlationId == null || correlationId.isBlank()) {
+                LOG.error("Missing correlationId");
                 return MessageBuilder.withPayload(new Reply<>(ReplyStatus.ERROR, "Missing correlationId", null))
                         .build();
             }
@@ -46,7 +50,9 @@ public class AiCommandConsumer {
 
             Reply<Object> reply = switch (cmd.type()) {
                 case CommandType.CREATE_TEMPLATE -> {
+                    LOG.trace("Starting template creation");
                     if (cmd.body() == null) {
+                        LOG.error("Missing body");
                         yield new Reply<>(ReplyStatus.ERROR, "Create Empty body", null);
                     }
 
@@ -57,7 +63,9 @@ public class AiCommandConsumer {
                 }
 
                 case CommandType.CREATE_INFORMATION -> {
+                    LOG.trace("Starting information creation");
                     if (cmd.body() == null) {
+                        LOG.error("Missing body");
                         yield new Reply<>(ReplyStatus.ERROR, "Create Empty body", null);
                     }
 
@@ -67,10 +75,6 @@ public class AiCommandConsumer {
 
                     yield new Reply<>(ReplyStatus.SUCCESS, "Information created",
                             informationService.create(informationAiResponse));
-                }
-
-                default -> {
-                    yield new Reply<>(ReplyStatus.ERROR, "Unknown command type", null);
                 }
             };
 
