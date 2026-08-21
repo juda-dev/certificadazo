@@ -159,3 +159,15 @@ services:
       timeout: 10s
       retries: 10
       start_period: 90s
+
+  lgtm:
+    image: grafana/otel-lgtm:0.8.6
+    container_name: lgtm
+    ports:
+      - "3000:3000"
+      - "4317:4317"
+      - "4318:4318"
+    environment:
+      - ENABLE_METRICS=true
+      - ENABLE_LOGS=true
+      - ENABLE_TRACES=true
