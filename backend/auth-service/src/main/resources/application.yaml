@@ -9,6 +9,9 @@ spring:
     virtual:
       enabled: true
 
+  config:
+    import: optional:file:.env[.properties]
+
   security:
     oauth2:
       resourceserver:
@@ -37,9 +40,9 @@ keycloak:
   server-url: http://localhost:8080
   realm: certificadazo
   client-id: certificadazo-client
-  client-secret: ${KEYCLOAK_CLIENT_SECRET:eujeGotHN7XuePNiax9vaGGx8ibN2sfr}
-  admin-username: ${KEYCLOAK_ADMIN_USERNAME:admin}
-  admin-password: ${KEYCLOAK_ADMIN_PASSWORD:admin}
+  client-secret: ${KEYCLOAK_CLIENT_SECRET}
+  admin-username: ${KEYCLOAK_ADMIN_USERNAME}
+  admin-password: ${KEYCLOAK_ADMIN_PASSWORD}
 
 eureka:
   client:
