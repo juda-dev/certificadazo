@@ -153,7 +153,7 @@ public class InformationAiServiceImpl implements InformationAiService {
         Reply<?> reply;
 
         try {
-            reply = (Reply<?>) future.get(Duration.ofSeconds(5).toMillis(), TimeUnit.MILLISECONDS);
+            reply = (Reply<?>) future.get(Duration.ofSeconds(15).toMillis(), TimeUnit.MILLISECONDS);
             LOG.info("Response received from the template service");
         } catch (InterruptedException | ExecutionException | TimeoutCommandException | TimeoutException e) {
             LOG.error("Error trying to send command to template service", e);
