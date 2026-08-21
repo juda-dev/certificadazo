@@ -1,23 +1,5 @@
 package dev.juda.ai_service.information.service.implementation;
 
-import java.time.Duration;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.stream.Collectors;
-
-import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.cloud.stream.function.StreamBridge;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClient;
-import org.springframework.web.multipart.MultipartFile;
-
 import dev.juda.ai_service.information.presentation.dto.in.InformationResponse;
 import dev.juda.ai_service.information.presentation.dto.out.InformationAiResponse;
 import dev.juda.ai_service.information.presentation.dto.request.InformationRequest;
@@ -32,8 +14,27 @@ import dev.juda.ai_service.shared.util.enums.CommandType;
 import dev.juda.ai_service.shared.util.enums.SupportedFileType;
 import dev.juda.ai_service.template.service.exception.CommandNotSentException;
 import dev.juda.ai_service.template.service.exception.TimeoutCommandException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cloud.stream.function.StreamBridge;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClient;
+import org.springframework.web.multipart.MultipartFile;
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
+
+import java.time.Duration;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.stream.Collectors;
 
 @Service
 public class InformationAiServiceImpl implements InformationAiService {
@@ -46,6 +47,7 @@ public class InformationAiServiceImpl implements InformationAiService {
     private final ObjectMapper mapper;
     private final StreamBridge streamBridge;
     private final ReplyInbox replyInbox;
+    private static final Logger LOG = LoggerFactory.getLogger(InformationAiServiceImpl.class);
 
     public InformationAiServiceImpl(@Qualifier("templates") RestClient templatesRestClient, FileValidator fileValidator,
             @Qualifier("deepSeekChatClient") ChatClient deepseekChatClient, CsvConverter csvConverter,
@@ -63,18 +65,22 @@ public class InformationAiServiceImpl implements InformationAiService {
 
     @Override
     public Set<InformationResponse> create(MultipartFile file, InformationRequest req) {
+        LOG.trace("Starting creation of information for the template {}", req.templateId());
         String fileType = fileValidator.validate(file, SupportedFileType.CSV);
 
         String csvText = csvConverter.toPlainText(file);
 
+        LOG.trace("Obtaining the fields from the template service");
         Set<String> fields = templatesRestClient.get()
                 .uri("/fields/{id}", req.templateId())
                 .retrieve()
                 .body(new ParameterizedTypeReference<Set<String>>() {
                 });
+        LOG.debug("Fields obtained {}",  fields);
 
         String dataStructure = mapper.writeValueAsString(fields);
 
+        LOG.trace("Initiating a DeepSeek API request");
         var aiResponse = deepseekChatClient
                 .prompt()
                 .user(u -> u.text("""
@@ -96,11 +102,13 @@ public class InformationAiServiceImpl implements InformationAiService {
                         UUID userId = null;
 
                         if (!ai.documentId().isBlank()) {
+                            LOG.trace("Receiving user based on their documentId from the user service");
                             userId = usersRestClient.get()
                                     .uri("/find-id/document-id/{documentId}", ai.documentId())
                                     .retrieve()
                                     .body(UUID.class);
                         } else if (!ai.email().isBlank()) {
+                            LOG.trace("Receiving user based on their email from the user service");
                             userId = usersRestClient.get()
                                     .uri("/find-id/email/{email}", ai.email())
                                     .retrieve()
@@ -109,6 +117,7 @@ public class InformationAiServiceImpl implements InformationAiService {
 
                         return new InformationAiResponse(userId, ai.templateId(), ai.data());
                     } catch (Exception e) {
+                        LOG.error("Error trying to receive a response from the DeepSeek API: {}", e.getMessage(), e);
                         return null;
                     }
 
@@ -116,6 +125,7 @@ public class InformationAiServiceImpl implements InformationAiService {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
 
+        LOG.trace("A command is sent to the template service");
         var cmd = new Command<>(CommandType.CREATE_INFORMATION, null, finalResponse);
         Reply<?> reply = getReply(cmd, "CREATE");
 
@@ -124,6 +134,7 @@ public class InformationAiServiceImpl implements InformationAiService {
     }
 
     private Reply<?> getReply(Command<?> cmd, String methodName) {
+        LOG.trace("Starting process to receive a response from the template service");
         String correlationId = UUID.randomUUID().toString();
         var future = replyInbox.register(correlationId);
 
@@ -135,6 +146,7 @@ public class InformationAiServiceImpl implements InformationAiService {
         boolean sent = this.streamBridge.send("commands-out-0", msg);
 
         if (!sent) {
+            LOG.error("Error trying to send command to template service");
             throw new CommandNotSentException();
         }
 
@@ -142,7 +154,9 @@ public class InformationAiServiceImpl implements InformationAiService {
 
         try {
             reply = (Reply<?>) future.get(Duration.ofSeconds(5).toMillis(), TimeUnit.MILLISECONDS);
+            LOG.info("Response received from the template service");
         } catch (InterruptedException | ExecutionException | TimeoutCommandException | TimeoutException e) {
+            LOG.error("Error trying to send command to template service", e);
             throw new TimeoutCommandException("ai-service_" + methodName);
         }
 
